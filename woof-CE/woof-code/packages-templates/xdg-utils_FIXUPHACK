@@ -1,0 +1,2 @@
+# use the one from rootfs-skeleton
+mv -f usr/bin/xdg-open usr/bin/xdg-open.real

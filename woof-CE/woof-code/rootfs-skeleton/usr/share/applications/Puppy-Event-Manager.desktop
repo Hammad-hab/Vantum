@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Event manager
+Icon=/usr/share/pixmaps/puppy/execute.svg
+Comment=Configure services running in the background
+Exec=eventmanager
+Terminal=false
+Type=Application
+Categories=X-SystemSchedule
+GenericName=Event manager

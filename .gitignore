@@ -1,0 +1,10 @@
+run_woof.conf
+bash_history
+
+*.iso
+*.sfs
+
+local-repositories/
+woof-output--/
+woof-out_backup/
+woof-out_x86_64_x86_64_ubuntu_jammy64/

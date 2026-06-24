@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>HOWTO multimedia</title>
+	<meta charset="utf-8">
+	<link href="./manual.css" rel="stylesheet" type="text/css">
+	<style>
+		inline-code {
+			background-color: #eee;
+			font-family: monospace;
+			padding: 3px 4px;
+			display: inline-block;
+			margin: 1px 0px;
+		}
+
+		table tbody tr:nth-child(odd) {
+			background-color: #f9f9f9;
+		}
+
+		table {
+			margin-left: auto !important;
+			margin-right: auto !important;
+			width: auto !important;
+			border-spacing: 0px;
+			margin: 0px !important;
+			text-align: center;
+		}
+
+		table p {
+			padding: 0px;
+			margin: 4px 0px;
+		}
+	</style>
+	<base target="_blank">
+</head>
+<body>
+	<a href="#" class="scroll_back_button" target="_self">&uArr;</a>
+
+	<div id="container">
+		<header class="logo-header">
+			<img class="header-logo" alt="Logo" src="puppylogo96.png">
+			<h1>HOWTO: Multimedia</h1>
+		</header>
+		<section>
+			<p>
+				The whole linux community has an excellent range of multimedia editing, conversion and viewing tools, which will most probably work on Puppy. This help page gives a brief description on some of the multimedia programs you can use on Puppy. The links are to "online help" pages for each program.
+			</p>
+			<p>
+				Puppy Linux versions will usually have several of these programs already installed, with at least one program for each media type. In case you want to install some other programs listed here, you can install it through Puppy Package Manager in your Puppy (or other package manager, like <inline-code>apt</inline-code> or <inline-code>slapt</inline-code>, if present in your Puppy).
+			</p>
+		</section>
+		<section>
+			<h2>Graphics</h2>
+			<p>
+				Puppy has a very useful collection of applications and utilities for manipulating graphic images, both bitmap and vector. Programs like GIMP also support GIF (see, if you are interested, tutorial on <a href="https://itsfoss.com/make-gif-in-gimp/">GIF with GIMP</a>), though GIF is unusable unless animation is to be prepared.<br><br>
+				The following table is a summary (Note that by clicking on a link in "Program" column, you can visit that program's help/documentation):
+			</p>
+			<table>
+				<thead>
+					<tr>
+						<th>Program</th>
+						<th>Notes</th>
+						<th>Supported File Formats</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<a href="https://www.gimp.org/docs/">GIMP</a>
+						</td>
+						<td>
+							<inline-code>GIMP</inline-code> is an open-source cross-platform image editing program supporting a large variety of features and file formats. Large varieties of plug-ins are available, which provide even more features and file-type support. Read <a href="https://www.gimp.org/about/introduction.html">this webpage</a> to see more of its features.
+						</td>
+						<td>
+							BMP, GIF, JPEG, MNG, PCX, PDF, PNG, PS, PSD, SVG, TIFF, TGA, XPM, SVG and so on!
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="https://linux.die.net/man/1/xpaint">Xpaint</a>
+						</td>
+						<td>
+							<inline-code>Xpaint</inline-code> is a bitmap (raster) picture editor and viewer.
+						</td>
+						<td>
+							GIF, ICO, JPEG, PNG, PPM, PS, PDF, TIFF, XBM, XPM, XWD
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="https://mtpaint.sourceforge.net/handbook/en_GB/chap_00.html">mtPaint</a>
+						</td>
+						<td>
+							<inline-code>mtPaint</inline-code> is a bitmap image editor which specialises in pixel-level editing of images, and can be used as paint program as well.
+						</td>
+						<td>
+							BMP, GIF, JPEG, LBM, LSS16, PAM, PBM, PCX, PGM, PMM, PNG, PPM, SVG, TGA, TIFF, WEBP, XBM, XPM
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="https://inkscape.org/learn/">Inkscape</a>
+						</td>
+						<td>
+							<inline-code>Inkscape</inline-code> is an open-source vector graphics editor similar to <inline-code>Adobe Illustrator</inline-code>, <inline-code>Corel Draw</inline-code>, <inline-code>Freehand</inline-code>, or <inline-code>Xara X</inline-code>. What sets <inline-code>Inkscape</inline-code> apart is its use of Scalable Vector Graphics (SVG), an open XML-based W3C standard, as the native format. It also has got a variety of extensions to support more features and file formats.
+						</td>
+						<td>
+							SVG, SVGZ, PDF, Postscript/EPS/EPSi, LaTeX (*.tex), POVRay (*.pov), HPGL, JPEG, PNG, GIF, FXG, SIF, HTML5 Canvas and so on!
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="https://sourceforge.net/projects/gtksee.berlios/">GTKSee</a>
+						</td>
+						<td>
+							<inline-code>GTKSee</inline-code> is an image viewer, manager and slideshow. It displays thumbnails but has a lot more functionality optimised for managing images, such as showing the dimensions of images when there is mouse-over a thumbnail. The slideshow feature is very nice.
+						</td>
+						<td>
+							BMP, GIF, EPS, PCX, PPM, PSD, SGI, SUN, TGA, XBM, XCF, XPM, XWD
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="https://kornelix.net/fotoxx/fotoxx.html">Fotoxx</a>
+						</td>
+						<td>
+							<inline-code>Fotoxx</inline-code> is a free open source Linux program for photo/image editing and collection management. The goal is to meet the needs of serious photographers while remaining fast and easy to use.
+						</td>
+						<td>
+							JPEG, PNG, TIFF, raw image formats
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="https://manpages.debian.org/testing/gpicview/gpicview.1.en.html">Gpicview</a>
+						</td>
+						<td>
+							<inline-code>Gpicview</inline-code> is an open-source simple and fast image viewer designed to be minimal on dependencies.
+						</td>
+						<td>
+							TIFF, PNG, JPEG. and so on!
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="https://siyanpanayotov.com/project/viewnior">Viewnior</a>
+						</td>
+						<td>
+							<inline-code>Viewnior</inline-code> is created to be simple and elegant. It’s minimalistic interface provides more screen space for your images.
+						</td>
+						<td>
+							PNG, JPEG, TIFF, TGA, GIF, SVG, and so on!
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="https://linux.die.net/man/1/fig2dev">fig2dev</a>
+						</td>
+						<td>
+							<inline-code>fig2dev</inline-code> converts a FIG vector image to a variety of vector and bitmap formats.
+						</td>
+						<td>
+							CGM, PIC, PS, EMF, EPS, PDF, SVG, GIF, JPEG, PCX, PNG, PPM, SLD, TIFF, XBM, XPM and so on!
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="http://www.calvina.de/pstoedit/">pstoedit</a>
+						</td>
+						<td>
+							<inline-code>pstoedit</inline-code> is used to export Postscript and PDF files to various vector formats.
+						</td>
+						<td>
+							PS, AI, IDRAW, FIG, XFIG, TGIF, TK, HPGL, PIC, MMA, MPOST, SK (Sketch), KIL (Kontour), PDF, JAVA1, JAVA2, DXF, RPL, RIB, LWO, DXF
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="https://github.com/kohler/gifsicle">gifsicle</a>
+						</td>
+						<td>
+							<inline-code>gifsicle</inline-code> is a console program for constructing animated gifs. It is also a gif viewer. Most importantly, it can analyse frames and create an animated gif in which subsequent frames only have the changes from the previous frame, greatly reducing size.
+						</td>
+						<td>
+							GIF
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="http://www.scale2x.it/">scalerx</a>
+						</td>
+						<td>
+							<inline-code>scalerx</inline-code> is a superb console program. If you have a small bitmap image and you want to make it bigger, it will have jagged edges, however <inline-code>scalerx</inline-code> analyses the image and smooths the edges.
+						</td>
+						<td>
+							PNG
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="https://linux.die.net/man/1/qiv">qiv</a>
+						</td>
+						<td>
+							<inline-code>qiv</inline-code> is an image viewer developed with <inline-code>gdk/imlib</inline-code>. As a result, <inline-code>qiv</inline-code> is faster than traditional image viewers such as <inline-code>xv</inline-code> or <inline-code>xli</inline-code>.
+						</td>
+						<td>
+							GIF, TIFF, XPM, PNG, PPM, PNM, PGM, BMP, JPEG, SVG, ICO, TGA, ICNS, WMF
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="https://manpages.debian.org/unstable/grabc/grabc.1.en.html">grabc</a>
+						</td>
+						<td>
+							<inline-code>grabc</inline-code> is a simple application that displays a crosshair that is placed as desired then a left-click samples the underlying color and displays its red-green-blue components.
+						</td>
+						<td>
+							-
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+		<section>
+			<h2>Video</h2>
+			<table>
+				<thead>
+					<tr>
+						<th>Program</th>
+						<th>Notes</th>
+						<th>Supported Video Codecs</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<a href="https://www.videolan.org/vlc/index.html">VLC</a>
+						</td>
+						<td>
+							<inline-code>VLC</inline-code> is a free and open source cross-platform multimedia player and framework that plays most multimedia files as well as DVDs, Audio CDs, VCDs, and various streaming protocols. See <a href="https://www.videolan.org/vlc/features.html">more of its features!</a>
+						</td>
+						<td>
+							MPEG, DivX, XviD, 3ivX D4, H.261, H.263, H.264, Cinepak, Theora, Dirac, WMV, VC, Sorenson, DV, On2 VP3/VP5/VP6, Indeo Video v3 (IV32), Real Video
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="https://mpv.io/manual/">MPV</a>
+						</td>
+						<td>
+							<inline-code>mpv</inline-code> is a free media player for the command line. It supports a wide variety of media file formats, audio and video codecs, and subtitle types.
+						</td>
+						<td>
+							See <a href="http://ffmpeg.org/general.html#Supported-File-Formats_002c-Codecs-or-Features">ffmpeg's supported video codecs</a>.
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="http://www.mplayerhq.hu/design7/documentation.html">Mplayer</a>
+						</td>
+						<td>
+							<inline-code>MPlayer</inline-code> is a free and open-source media player software application. See <a href="http://www.mplayerhq.hu/design7/info.html">more of its features!</a>
+						</td>
+						<td>
+							MPEG/VOB, AVI, Ogg/OGM, VIVO, ASF/WMA/WMV, QT/MOV/MP4, RealMedia, Matroska, NUT, NuppelVideo, FLI, YUV4MPEG, FILM, RoQ, PVA
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="http://xinehq.de/index.php/faq">gxine</a>
+						</td>
+						<td>
+							<inline-code>gxine</inline-code> is a media player that will handle a wide range of video file formats and uses the back-end engine - <a href="http://xinehq.de/">xine-lib</a>.
+						</td>
+						<td>
+							mpeg 1/2/4, ms mpeg, divx, motion jpeg, Cinepak, DV, msvc, ms rle, Sorenson SVQ1/SVQ3, cyuv, roq video, QT RLE, SMC, RPZA, Theora, Indeo 3.1-5.0, Window Media Video, On2 VP3.1, I263, Real Media
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+		<section>
+			<h2>Audio</h2>
+			<table>
+				<thead>
+					<tr>
+						<th>Program</th>
+						<th>Notes</th>
+						<th>Supported Audio Codecs</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<a href="https://www.audacityteam.org/about/features/">Audacity</a>
+						</td>
+						<td>
+							<p>
+								<inline-code>Audacity</inline-code> is an easy-to-use, multi-track audio editor and recorder. Audacity is free, open source software.
+							</p>
+							<p>
+								Note that you can install optional <inline-code>ffmpeg</inline-code> dependency to get support of more audio formats.
+							</p>
+						</td>
+						<td>
+							MP3, Ogg, Vorbis, FLAC and MP2
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="https://forum.puppylinux.com/viewtopic.php?t=5801">pMusic</a>
+						</td>
+						<td>
+							<inline-code>pMusic</inline-code> is a GUI media program developed specifically for PuppyLinux. You can play music from files, radio stations, podcasts and CDs.
+						</td>
+						<td>
+							3gp, aac, ac3, act, aif, aiff, amr, ape, asf, au, dss, flac, gsm, m4 (a/b), mmf, mp (1/2/3/4), mpc, oga, ogg, opus, ra, raw, rm, shn, sln, tta, voc, wav, webm, and so on!
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="http://www.linuxcertif.com/man/1/wavplay/">wavplay</a>
+						</td>
+						<td>
+							<inline-code>wavplay</inline-code> is a console application that plays wav audio files.
+						</td>
+						<td>
+							WAV
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="http://xinehq.de/index.php/faq">gxine</a>
+						</td>
+						<td>
+							<p>
+								<inline-code>gxine</inline-code> is a media player that will handle a wide range of audio file formats.
+							</p>
+							<p>
+								<inline-code>gxine</inline-code> can also play audio streamed from the Internet. It will play audio CDs without requiring an internal cable connecting audio-out on CD-drive to sound card -- other CD players listed below require the cable.
+							</p>
+						</td>
+						<td>
+							mpeg, a/52 (ac3), aac, dts, vorbis, pcm, adpcm (MS/IMA/DVI/Dialogic), mu-law and A-law, roq dpcm, Real Media dnet, Real Media 28.8, DivX (WMA), GSM 6.10, FLAC, NSF, Speex, MS GSM, Intel Music Coder, Voxware Metasound, ACELP.net, dnet, QDM
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="https://manpages.ubuntu.com/manpages/trusty/man1/ripperX.1.html">ripperX</a>
+						</td>
+						<td>
+							<p>
+								Rips songs off audio CDs and saves them as wav or mp3.
+							</p>
+							<p>
+								You could use <inline-code>ripperX</inline-code> as just a CD player. One great thing is the support for <inline-code>cddb</inline-code> -- if connected to the Internet, just click the <inline-code>cddb</inline-code> button and all the CD song titles will get downloaded.
+							</p>
+						</td>
+						<td>
+							<p>
+								Imports:- CD audio tracks
+							</p>
+							<p>
+								Exports:- Ogg, MP3, FLAC
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="http://littlesvr.ca/asunder/">Asunder</a>
+						</td>
+						<td>
+							<inline-code>Asunder</inline-code> is a free and open-source graphical audio CD ripper program.
+						</td>
+						<td>
+							<p>
+								Imports:- CD audio tracks
+							</p>
+							<p>
+								Exports:- WAV, MP3, Ogg Vorbis, FLAC, Opus, Wavpack, Musepack, AAC, and Monkey's audio files
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="http://www.linuxcertif.com/man/1/cdplay/">cdplay</a>
+						</td>
+						<td>
+							Console application to play audio CDs.
+						</td>
+						<td>
+							Imports:- CD audio tracks
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="https://linux.die.net/man/1/graveman">graveman!</a>
+						</td>
+						<td>
+							<inline-code>graveman!</inline-code> can be used to burn audio CDs from audio files. See <a href="https://www.nongnu.org/graveman/main.html">graveman's home page</a>.
+						</td>
+						<td>
+							<p>
+								Imports:- WAV, Ogg, MP3, Flac
+							</p>
+							<p>
+								Exports:- CD audio tracks
+							</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+		<section>
+			<h2>Scanning</h2>
+			<p>
+				All modern Puppies are built with a shell command named <inline-code>xsaneshell</inline-code>. It is built as a wrapper around the command <inline-code>xsane</inline-code>, so as to allow <inline-code>xsane</inline-code> to work in Puppy. <inline-code>xsane</inline-code> itself is a GUI front-end to <inline-code>sane</inline-code> command.
+			</p>
+			<p>
+				To run the command, open up a terminal and enter this command there:-
+				<code>
+					xsaneshell
+				</code>
+			</p>
+		</section>
+		<section>
+			<h2>Printing</h2>
+			<p>
+				Printing in Puppy is based around <inline-code>Ghostscript</inline-code> and <inline-code>CUPS</inline-code>, and the main applications such as <inline-code>Abiword</inline-code>, <inline-code>Amaya</inline-code>, <inline-code>Xpaint</inline-code> and <inline-code>Firefox</inline-code>, generate files in <b>Postscript</b> format for printing. The <inline-code>gs</inline-code> program is able to convert <b>Postscript</b> files to a format suited to a particular printer.
+			</p>
+			<p>
+				The <inline-code>Ghostscript</inline-code> package has its own set of printer drivers, however that is very limited. So, Puppy uses the <inline-code>Gutenprint</inline-code> drivers, that works with <inline-code>Ghostscript</inline-code>. This adds support for <b>over 1300</b> printers.
+			</p>
+			<p>
+				To be able to print, you must first run the <b>CUPS Printer Wizard</b>. This enables you to choose the correct driver and configure it to work in Puppy. To run this application, open up a terminal and enter this command in it:-
+				<code>
+					cups_shell
+				</code>
+			</p>
+			<p>
+				<inline-code>CUPS</inline-code>, <inline-code>Ghostscript</inline-code>, fonts, and the full set of <inline-code>Gutenprint</inline-code> drivers are usually built-in to Puppy. But, in case they are not present, you'll have to install them using the package manager your Puppy provides. Note that if you have a <b>Hewlett Packard</b> printer that is not in the <inline-code>Gutenprint</inline-code> driver-suite, there is an extra PET package available, named <inline-code>hpijs</inline-code> or <inline-code>hplip</inline-code>.
+			</p>
+		</section>
+		<hr>
+		<footer>
+			Have fun!
+			<span style="display: block; width: 100%; text-align: right; margin: 0px; padding: 0px">- woof-CE Team</span>
+		</footer>
+	</div>
+</body>
+</html>

@@ -1,0 +1,5 @@
+#!/bin/bash
+#Backward compatability for changed name.
+#230919 BK: /usr/local/simple_network_setup/rc.network renamed to rc.snsnetwork
+
+exec /usr/local/simple_network_setup/rc.snsnetwork "$@"

@@ -1,0 +1,20 @@
+#!/bin/sh
+
+dridir=`pwd`
+for i in $PLIBDIRS # $PLIBDIRS is exported in 2createpackages
+do
+	[ -d $i ] || continue
+	#get rid of the vmware dri driver...
+	if [ -f ${i}/vmwgfx_dri.so ] ; then
+		rm -fv ${i}/vmwgfx_dri.so
+	fi
+	if [ -f ${i}/virtio_gpu_dri.so ] ; then
+		rm -fv ${i}/virtio_gpu_dri.so
+	fi
+	#raring pup has this...
+	if [ -f ${i}/gallium-pipe/pipe_vmwgfx.so ] ; then
+		rm -fv ${i}/pipe_vmwgfx.so
+	fi
+	#dri *.so symlinks have been moved to _DEV - move them back
+	mv ${dridir}_DEV/${i}/dri/*.so ${dridir}/${i}/dri
+done

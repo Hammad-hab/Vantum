@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>CUPS Web Interface Help</title>
+	<meta charset="utf-8">
+	<link href="./manual.css" rel="stylesheet" type="text/css">
+	<link href="./highlight.css" rel="stylesheet" type="text/css">
+	<base target="_blank">
+    <script src="./references.js"></script>
+</head>
+<body>
+	<a href="#" class="scroll_back_button" target="_self">&uArr;</a>
+	<div id="container">
+		<header class="logo-header">
+			<img class="header-logo" alt="Logo" src="puppylogo96.png">
+			<h1>CUPS Web Interface Help</h1>
+		</header>
+		<section>
+			<p>
+				Your default browser should have opened (or will open after 3-30 seconds) with the CUPS web interface. Here you can add and configure your printer.
+			</p>
+			<p>
+				<b>IMPORTANT:</b> If asked for a username and password, enter '<b>root</b>' and '<b>woofwoof</b>'.
+			</p>
+			<p>
+				Click on <b>Manage Printers</b>, then <b>Add Printer</b>. Enter a name for your printer, e.g. <mark>HL1030</mark>. The <b>Location</b> and <b>Description</b> fields can be left blank. Click <b>Continue</b>.
+			</p>
+			<p>
+				The steps after that should be straightforward, and hopefully you will find a printer driver that works for you. Finally you should see a message: <mark>Printer HL1030 has been added successfully</mark>.
+			</p>
+ 			<p>
+				Click on <b>Printers</b>, <b>Configure Printer</b> to change <b>Page Size</b> (if needed) and <b>Resolution</b> (600 DPI is good for most jobs). Click <b>Continue</b>, then <b>Printers</b> again. The <b>Printer State</b> should be <mark>idle, accepting jobs</mark>.
+			</p>
+			<p>
+				Finally, click <b>Print Test Page</b> to see if your printer works.
+			</p>
+		</section>
+		<section>
+			<h2>Printer drivers</h2>
+			<p>
+				Puppy has the Gutenprint package, which has a lot of printer drivers. However, if your printer is not among them, you may be able to find a driver online.<br><br>
+				The standard file format for a printer driver is <b>PPD</b> or <b>Postscript Printer Description</b>. <a href="https://www.wikipedia.org/">Wikipedia</a> has got a great article on <a href="https://en.m.wikipedia.org/wiki/PostScript_Printer_Description">PostScript Printer Description (PPD) files</a>, in case you are interested.<br><br>
+				Two manufacturers with excellent support for Linux are <b>Brother</b> and <b>Hewlett Packard</b>, and Puppy enthusiasts have created PET packages for them (See <a href="#1" target="_self"><sup>1</sup></a>).
+			</p>
+			<p>
+				Please read <a href="https://en.m.wikipedia.org/wiki/PostScript_Printer_Description#CUPS">Wikipedia's 'PPD' page's 'CUPS' section</a>.
+			</p>
+			<p>
+				Most printer manufactures, now have Linux drivers for their printers, you can download from their specific driver support web sites.<br><br>
+				<b>Hewlett Packard</b> has <b>Hpliplite</b> package for their printers. Specific solutions for other printers or more up-to-date packages, other manufactures will offer on their web sites.<br><br>
+				People who use Puppy Linux also may provide a driver package for the printer you have.<br><br>
+			</p>
+		</section>
+		<section>
+			<h1>Additional Reading:</h1>
+			<ul>
+				<li>
+					<h3>Printer Setup help:</h3>
+					<b><a href="https://forum.puppylinux.com/viewtopic.php?t=5477">Puppy Forum Printer Setup</a></b> provides a simple explanation with steps on setting up your own printer in Puppy.
+				</li>
+				<li id="1">
+					<h3>Puppy Drivers:</h3>
+					<b><a href="https://forum.puppylinux.com/viewforum.php?f=97">Puppy Forum Additional Software/Drivers</a></b> includes a list of lots of additional drivers.
+				</li>
+			</ul>
+		</section>
+		<section>
+			<h1>Additional Help:</h3>
+			<p>
+				Join our forum and feel free to ask any help at <b><a href="https://forum.puppylinux.com/viewforum.php?f=2">Puppy Forum Beginners Help</a></b>!
+			</p>
+		</section>
+		<footer>
+			<hr>Have fun!<br>
+			<span style="display: block; width: 100%; text-align: right; margin: 0px; padding: 0px">- Woof-CE Team</span>
+		</footer>
+	</div>
+</body>
+</html>

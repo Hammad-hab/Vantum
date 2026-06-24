@@ -1,0 +1,88 @@
+#!/bin/sh
+#v2.14 Puppy now has XDG menus.
+#this script builds the menus from template files.
+#Any templates can be placed into /etc/xdg/templates, and the file must be
+#named to show its final destination. For example, the template for JWM:
+# _root_.jwmrc
+#...the '_' will be converted to a '/', so the generated JWM config file is:
+# /root/.jwmrc
+# 5jan2008: fbpanel,lxpanel support developed by plinej.
+#100427 when called via /etc/rc.d/rc.update, HOME is '/' (needed by some of the menu generating apps).
+#120207 translation of some SSS strings. refer /usr/share/sss/menu_strings/
+#120209 this script now called from /usr/sbin/quicksetup, whenever locale is changed.
+#120216 sss translation file now uses simple sed expressions.
+
+[ ! "$HOME" ] && HOME='/root'
+[ "$HOME" = "/" ] && HOME='/root'
+export HOME
+
+[ -f $HOME/.jwm/menuheights ] && . $HOME/.jwm/menuheights
+
+if [ "$LANG" = "C" ];then #fix in case this script gets called with LANG=C
+	LANG="`grep '^LANG=' /etc/profile`"
+	LANG=${LANG#*=} #cut -f 2 -d '='  .. ex: en_US.UTF-8
+	export LANG
+fi
+LANG1="${LANG%_*}" #120207 ex: de
+
+for ONESRC in `ls /etc/xdg/templates/_* 2>/dev/null` #ex: _root_.jwmrc
+do
+	ONEDEST=${ONESRC##*/}    # basename: _root_.jwmrc
+	[ ! "$ONEDEST" = '_root_.jwmrc' ] && MENHEIGHT=''
+	if [ "$HOME" != "/root" ] ; then
+		ONEDEST=${ONEDEST//_root/$HOME} # _root.jwmrc -> /home/finn_.jwmrc
+	fi
+	ONEDEST=${ONEDEST//_/\/} # _root_.jwmrc -> /root/.jwmrc
+	echo "Generating $ONEDEST..."
+ 
+	[ -f $ONEDEST ] && mv -f $ONEDEST ${ONEDEST}-previous
+
+	[ "$MENHEIGHT" ] && MH=$MENHEIGHT || MH=24
+
+	TMPDEST=`mktemp $ONEDEST.XXXXXXXXXX`
+
+	sed "s|MENHEIGHT|$MH|" ${ONESRC} | \
+	(
+	while read ONELINE
+	do
+		case "$ONELINE" in PUPPYMENU*)
+			EXECMENU="${ONELINE#PUPPYMENU }" #remove leading PUPPYMENU
+			${EXECMENU} ${MENHEIGHT} #>> ${TMPDEST}
+			continue
+		esac
+		echo "$ONELINE" #>> ${TMPDEST}
+	done
+	) > ${TMPDEST}
+
+	#120207 translate some strings... 120216...
+	if [ "$LANG1" != "en" ];then
+		if [ -f /usr/share/sss/menu_strings/menu_strings.${LANG1} ];then
+			sPTN="/^\[${ONETPL}\]/,/^$/p" #this is a multi-line block find expression.
+			CODEBLOCK="`sed -n "$sPTN" /usr/share/sss/menu_strings/menu_strings.${LANG1} | sed -e '/^#/d' -e '/%%/d' -e '/^$/d' -e '/^\[/d'`" #extracts just the relevant block of lines.
+			if [ "$CODEBLOCK" ];then
+				echo "$CODEBLOCK" > /tmp/fixmenus-translationblock
+				#121124 ensure that all [ ] are escaped... 121125 revert... 121126 restore, plus escape '.' chars...
+				sed -i -e 's%\[%\\[%g' -e 's$\]$\\]$g' -e 's%\\\\\[%\\[%g' -e 's%\\\\\]%\\]%g' /tmp/fixmenus-translationblock
+				sed -i -e 's%\.%\\.%g' -e 's%\\\\\.%\\.%g' /tmp/fixmenus-translationblock #note: 2nd ptn gets rid of prior escape char, so there remains just one.
+				sed -i -f /tmp/fixmenus-translationblock ${TMPDEST}
+			fi
+		fi
+	fi
+
+	mv -f ${TMPDEST} ${ONEDEST}
+done
+
+# support labwc menu iconfont
+if type labwc >/dev/null 2>&1 ;then
+	if [ -e "/usr/share/fonts/default/TTF/pupmoon.ttf" ];then # icon font
+		[ -x "/usr/sbin/iconmenu" ] && iconmenu
+	fi
+fi
+
+#w001 support for fbpanel, lxpanel, openbox, fluxbox, pekwm...
+[ `which fbpanel_menu_refresh` ] && fbpanel_menu_refresh
+[ `which jwm2fluxbox` ] && jwm2fluxbox  ##current fluxbox_menu_refresh doesn't support menu icons while this does
+[ `which obmenu-refresh` ] && obmenu-refresh
+[ `which jwm2pekwm` ] && jwm2pekwm
+
+###END###

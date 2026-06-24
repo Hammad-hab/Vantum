@@ -1,0 +1,148 @@
+#!/bin/sh
+
+# LAYER_TYPE and DELETE_TMP are defined in run_woof.conf
+[ -f "./run_woof.conf" ] && . "./run_woof.conf"
+
+[ "`whoami`" != "root" ] && exec sudo ${0} ${@}
+
+# not made if using puppy sfs
+#ISO_MNT="$(mktemp -d -u -p /mnt)"
+
+SFS_MNT="$(mktemp -d -u -p /mnt)"
+DEVX_MNT="$(mktemp -d -u -p /mnt)"
+TMP_MNT="$(mktemp -d -u -p /mnt)"
+AUFS_MNT="$(mktemp -d -u -p /mnt)"
+SHARE_MNT="$AUFS_MNT/root/share"
+
+TMP_SIZE=20%
+
+cond_unmount() {
+	mountpoint -q $1 && umount -l $1
+}
+
+cond_unmount_del() {
+	if [ -e "$1" ]; then
+		mountpoint -q $1
+		if [ $? -eq 0 ]
+		then
+			umount -l $1
+			rmdir $1 2>/dev/null
+		fi
+	fi
+}
+
+cleanup() {
+	cond_unmount_del $SHARE_MNT
+	cond_unmount $AUFS_MNT/tmp
+	cond_unmount $AUFS_MNT/sys
+	cond_unmount $AUFS_MNT/proc
+	cond_unmount $AUFS_MNT/dev/shm
+	cond_unmount $AUFS_MNT/dev/pts
+	cond_unmount $AUFS_MNT/dev
+	cond_unmount_del $AUFS_MNT
+	cond_unmount_del $TMP_MNT
+	cond_unmount_del $DEVX_MNT
+	cond_unmount_del $SFS_MNT
+	cond_unmount_del $ISO_MNT
+	[ "$DELETE_TMP" = 'yes' ] && rm -rf "$SHARE_DIR/run_woof-tmp"
+}
+
+usage() {
+	echo "Usage: $0 ISO|PUPPY_SFS DEVX_SFS SHARE [bashrc]" >&2
+	exit 1
+}
+
+[ $# -ne 3 -a $# -ne 4 ] && usage
+([ ! -f "$1" ] || [ ! -f "$2" ] || [ ! -d "$3" ]) && usage
+
+SHARE_DIR="$3"
+
+trap cleanup EXIT
+trap cleanup TERM
+trap cleanup INT
+
+if [ "${1#*.sfs}" = "$1" ]; then
+	ISO_MNT="$(mktemp -d -u -p /mnt)"
+	mkdir $ISO_MNT
+	mount -t iso9660 -o loop,ro "$1" $ISO_MNT || exit 1
+
+	mkdir $SFS_MNT
+	mount -t squashfs -o loop,ro $ISO_MNT/puppy_*.sfs $SFS_MNT || exit 1
+else
+	mkdir $SFS_MNT
+	mount -t squashfs -o loop,ro "$1" $SFS_MNT || exit 1
+fi
+
+mkdir $DEVX_MNT
+mount -t squashfs -o loop,ro "$2" $DEVX_MNT || exit 1
+
+mkdir $TMP_MNT
+mount -t tmpfs -o size=$TMP_SIZE rw $TMP_MNT || exit 1
+
+mkdir $AUFS_MNT
+if [ "$LAYER_TYPE" = 'overlay' ]; then
+	mkdir "${TMP_MNT}/tmp"
+	mkdir "${TMP_MNT}/work"
+	mount -t overlay overlay -olowerdir=$SFS_MNT:$DEVX_MNT,\
+upperdir="${TMP_MNT}/tmp",workdir="${TMP_MNT}/work" $AUFS_MNT
+else
+	mount -t aufs -o br=$TMP_MNT=rw:$DEVX_MNT=ro:$SFS_MNT=ro none $AUFS_MNT
+fi
+
+# some versions of umount will unmount bind mounts recursively,
+# which means that /dev/pts and /dev/shm get unmounted in the host system
+#mount -R /dev $AUFS_MNT/dev
+
+# different approach borrowed from Linux From Scratch
+mount -B /dev $AUFS_MNT/dev
+mount -t devpts devpts $AUFS_MNT/dev/pts
+if [ -h /dev/shm ]; then
+  rm -f $AUFS_MNT/dev/shm
+  mkdir $AUFS_MNT/dev/shm
+fi
+mount -t tmpfs shm $AUFS_MNT/dev/shm
+
+mount -B /proc $AUFS_MNT/proc
+mkdir -p $AUFS_MNT/sys
+mount -B /sys $AUFS_MNT/sys
+
+mkdir -p "$SHARE_DIR/run_woof-tmp"
+mount -B "$SHARE_DIR/run_woof-tmp" $AUFS_MNT/tmp
+
+mkdir $SHARE_MNT
+mount -R "$SHARE_DIR" $SHARE_MNT
+
+cp -f /etc/resolv.conf $AUFS_MNT/etc/
+[ -e "$XAUTHORITY" ] && cp -f $XAUTHORITY $AUFS_MNT/root/.Xauthority
+if [ -n "$4" -a -f "$4" ]; then
+	cp "$4" $AUFS_MNT/root/.bashrc
+elif [ -f "$SHARE_MNT/run_woof/bashrc" ]; then
+	ln -sf share/run_woof/bashrc $AUFS_MNT/root/.bashrc
+elif [ -f "$SHARE_MNT/run_woof-master/bashrc" ]; then
+	ln -sf share/run_woof-master/bashrc $AUFS_MNT/root/.bashrc
+fi
+if [ -d "$SHARE_MNT/run_woof" ]; then
+	touch "$SHARE_MNT/run_woof/bash_history" ; ln -s share/run_woof/bash_history $AUFS_MNT/root/.history
+elif [ -d "$SHARE_MNT/run_woof-master" ]; then
+	touch "$SHARE_MNT/run_woof-master/bash_history" ; ln -s share/run_woof-master/bash_history $AUFS_MNT/root/.history
+fi
+
+if [ "${2#*64_}" != "$2" ]; then
+	chroot $AUFS_MNT \
+		gdk-pixbuf-query-loaders --update-cache
+
+	LC_ALL=C \
+	LANG=C \
+	HOME=/root \
+	XAUTHORITY=/root/.Xauthority \
+	chroot $AUFS_MNT /bin/bash -i
+else
+	linux32 chroot $AUFS_MNT \
+		gdk-pixbuf-query-loaders --update-cache
+
+	LC_ALL=C \
+	LANG=C \
+	HOME=/root \
+	XAUTHORITY=/root/.Xauthority \
+	linux32 chroot $AUFS_MNT /bin/bash -i
+fi

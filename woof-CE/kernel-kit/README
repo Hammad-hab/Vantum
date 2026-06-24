@@ -1,0 +1,121 @@
+#######################################
+#                                     #
+#          KERNEL-KIT  (GPL v2)       #
+#                                     #
+#######################################      
+
+THIS KIT COMES WITH ABSOLUTELY NO WARRANTY, USE ENTIRELY AT OWN RISK
+NO RESPONSIBILITY ACCEPTED. YOU HAVE BEEN WARNED
+
+If you build woofce kernels and are aware of improper settings, etc
+You can provide suggestions or open pull requests to
+fix a specific config or set of configs.
+
+You can also help identify stuff that is not needed - unlikely to be used.
+Stuff that shouldn't be built in to vmlinuz or stuff that is actually important.
+
+The configs can be improved and you can help.
+
+You might also want to share your builds for others to test..
+
+---------------------------------------------------------------------------
+
+ABOUT
+-----
+This kit is designed to make it easy to compile a kernel (v3+) for Puppy Linux.
+The packages produced are compatible with FatDog (huge kernel).
+See Barry's Blog .. bkhome.org/blog or woof-CE 
+This kit assumes you are comfortable with shell scripts and command line usage.
+
+DEPENDENCIES
+------------
+This kit is designed for Puppy Linux. A late model build is 
+recommended, such as Slacko, tahrpup, xenialpup, Dpup-Exprimo, FatDog64
+Be aware that for best results you should compile in a host 
+distro which is compatible with the target distro.
+
+REQUIRED:
+gcc - for compilation
+git - for aufs sources
+mksquashfs - for compressing the kernel source sfs, will build without
+
+CREDIT
+------
+BarryK, for inventing Puppy Linux,
+Iguleder, the original designer of this kit, pemasu for input and bugfixes,
+jamesbond for fatdog stuff
+01micko - current version
+various testers on the Murga-Linux/puppy forum
+
+USAGE
+-----
+First, read & edit the build.conf file for your preferences
+It is recommended to use a $custom_suffix and $package_name_suffix
+
+Second, run "./build.sh"
+The kernel source will download, aufs will be downloaded from git
+The patches will be applied automatically and halt the script if 
+there are failures.
+The script will pause once all patches are applied so you 
+can configure the kernel.
+You can use:
+1. make menuconfig [default] (ncurses based)
+2. make gconfig (gtk based gui)
+3. make xconfig (qt based gui)
+4. make oldconfig 
+
+Save it when done and continue.
+
+Kernel headers are created, kernel compiles (takes a long time), kernel
+source sfs is created, kernel pet package is NOT created BUT the 
+correct directory structure is in place at dist/packages/linux_kernel*
+to make a pet easily. Same with headers. 
+
+New options in the build.conf file include choice of squashfs compression. 
+Also number of jobs is supported - use with caution. Read comments in build.conf.
+
+The kit can be cleaned with "./build.sh clean" which deletes everything except
+for configs. Please manually check before obliterating your work!
+
+Have fun!
+
+-----------------------------------------------------------------------
+
+TODO: fully support ARM arch
+
+-----------------------------------------------------------------------
+                               LINKS
+-----------------------------------------------------------------------
+
+Existing Linux Wireless Drivers
+	https://wireless.wiki.kernel.org/en/users/drivers
+
+UEFI (Unified Extensible Firmware Interface
+	https://wiki.archlinux.org/index.php/Unified_Extensible_Firmware_Interface
+
+Kernels/Compilation/Traditional
+	https://wiki.archlinux.org/index.php/Kernels/Compilation/Traditional
+
+Linux Kernel Reading Guide
+	https://www.linux.org/threads/linux-kernel-reading-guide.9639/
+
+eCryptfs
+	How to Set Up eCryptFS on Linux – The Manual Way
+		http://www.systutorials.com/1638/setting-up-ecryptfs-in-linux/
+	What kernel options do I need to enable to build eCryptfs?
+		https://answers.launchpad.net/ecryptfs/+question/46285
+
+Dm-crypt
+	https://wiki.gentoo.org/wiki/Dm-crypt#Kernel_Configuration
+	https://wiki.archlinux.org/index.php/Dm-crypt
+
+================================     INFO      ================================
+
+The 'huge' kernel builds require a number of drivers built into the kernel
+image (vmlinuz in x86/x86_64; zImage, uImage or kernel.img in ARM). Things
+that must be builtin are filesystems (ext2/3/4, f2fs, NTFS, FAT and others 
+which you may want to support as a boot partition) , AUFS, NLS support, 
+keyboard drivers and possibly others.
+eg:
+CONFIG_AUFS_FS=y
+===============================================================================

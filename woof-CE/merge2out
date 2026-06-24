@@ -1,0 +1,317 @@
+#!/bin/bash
+#BK nov. 2011
+
+WOOF_VERSION=9
+
+if [ ! -f /etc/rc.d/PUPSTATE -a -z "$GITHUB_ACTIONS" ] ; then
+	echo "It's not advised to use the build system"
+	echo "in a distro other than  a recent WOOFCE Puppy"
+	echo
+	echo "You should be able to do the building using run-woof"
+	echo "	https://github.com/puppylinux-woof-CE/run_woof"
+	echo "	http://murga-linux.com/puppy/viewtopic.php?p=963764&sid=bb5882c97a03e39fff3ecb2a827a5155"
+	echo
+	echo "So you wouldn't need to install Puppy if you don't want to"
+	echo "but you will still need to download a Puppy ISO and devx sfs."
+	exit 1
+fi
+
+if [ "`whoami`" != "root" ] ; then
+	echo "Must be root"
+	exit 1
+fi
+
+[ -d ./woof-code ] || [ -d ./woof-distro ] || exit
+
+if [ "$1" != "" ]; then
+	if [ -f ${1}/DISTRO_SPECS ]; then
+		COMPATVERSION_DIR=${1%/}
+		. ${COMPATVERSION_DIR}/DISTRO_SPECS
+		TARGETARCH=${DISTRO_TARGETARCH}
+		COMPATDISTRO=${DISTRO_BINARY_COMPAT}
+		COMPATVERSION=${DISTRO_COMPAT_VERSION}
+		ALTERNATE_BUILD=$COMPATVERSION_DIR
+	else
+		echo "Missing configuration directory: $1"
+		DIR="$1"
+		while [ -n "$DIR" ]; do
+			if [ -d "$DIR" ]; then
+				echo -e "\nAvailable under $DIR:"
+				ls -1 "$DIR" | grep -v -e ^Packages- -e ^DISTRO_
+				break
+			fi
+			PREV="$DIR"
+			DIR="${DIR%/*}"
+			[ "$DIR" = "$PREV" ] && break
+		done
+		exit 1
+	fi
+fi
+
+echo
+echo 'This script merges woof-arch, woof-code
+woof-distro, kernel-kit and initrd-progs to ../woof-out_*.
+See README.md
+'
+# autodetect HOSTARCH - how hard can it be?
+case `uname -m` in
+	i?86)HOSTARCH=x86 ;;
+	x86_64|amd64)HOSTARCH=x86_64 ;;
+	arm*)HOSTARCH=arm ;;
+	*) echo "Error detecting host architecture, exiting..." ; exit 1 ;;
+esac
+echo "-----------------"
+echo "Host arch: $HOSTARCH     (The host is the machine you are running Woof on)"
+echo "-----------------"
+echo
+echo "Please choose the target architecture.. (the target
+is the machine in which the Puppy that you build is going to run):"
+while [ "$TARGETARCH" = "" ] ; do
+	echo
+	CNT=1
+	for ONEARCH in `find woof-distro -mindepth 1 -maxdepth 1 -type d | sed -e 's%^woof-distro/%%' | sort | tr '\n' ' '`
+	do
+		echo "$CNT  $ONEARCH"
+		CNT=$(($CNT + 1))
+	done
+	echo -n 'Type number of target architecture: '
+	read nTARGETARCH
+	TARGETARCH="`find woof-distro -mindepth 1 -maxdepth 1 -type d | sed -e 's%^woof-distro/%%' | sort | head -n $nTARGETARCH 2>/dev/null | tail -n 1`"
+done
+echo "...ok, $TARGETARCH"
+echo
+
+echo 'Woof builds a Puppy based on the binary packages from another distro.
+We sometimes refer to this as the "compat-distro".'
+while [ "$COMPATDISTRO" = "" ] ; do
+	echo
+	CNT=1
+	taPTN="s%^woof-distro/${TARGETARCH}/%%"
+	for ONEDISTRO in `find woof-distro/${TARGETARCH} -mindepth 1 -maxdepth 1 -type d | sed -e "${taPTN}" | sort | tr '\n' ' '`
+	do
+		echo "$CNT  $ONEDISTRO"
+		CNT=$(($CNT + 1))
+	done
+	echo -n 'Type number of compat-distro: '
+	read nCOMPATDISTRO
+	COMPATDISTRO="`find woof-distro/${TARGETARCH} -mindepth 1 -maxdepth 1 -type d | sed -e "${taPTN}" | sort | head -n $nCOMPATDISTRO 2>/dev/null | tail -n 1`"
+done
+echo "...ok, $COMPATDISTRO"
+echo
+
+echo 'The compat-distro usually has release versions
+Choose which release you want to obtain the binary packages from.'
+while [ "$COMPATVERSION" = "" ] ; do
+	echo
+	CNT=1
+	for ONECOMPAT in `find woof-distro/${TARGETARCH}/${COMPATDISTRO} -maxdepth 1 -mindepth 1 -type d | rev | cut -f 1 -d '/' | rev | sort | tr '\n' ' '`
+	do
+		echo "$CNT  $ONECOMPAT"
+		CNT=$(($CNT + 1))
+	done
+	if [ $CNT -eq 1 ];then
+		echo -e "\nSorry, there are no release directories inside woof-distro/${COMPATDISTRO}."
+		exit
+	fi
+	if [ $CNT -eq 2 ];then
+		COMPATVERSION="`find woof-distro/${TARGETARCH}/${COMPATDISTRO} -maxdepth 1 -mindepth 1 -type d | rev | cut -f 1 -d '/' | rev | sort | head -n 1 2>/dev/null | tail -n 1`"
+		continue
+	fi
+	echo -n 'Type number of release: '
+	read nCOMPATVERSION
+	COMPATVERSION="`find woof-distro/${TARGETARCH}/${COMPATDISTRO} -maxdepth 1 -mindepth 1 -type d | rev | cut -f 1 -d '/' | rev | sort | head -n $nCOMPATVERSION 2>/dev/null | tail -n 1`"
+done
+echo "...ok, $COMPATVERSION"
+echo
+
+echo 'Choices:'
+echo "Host architecture:     $HOSTARCH"
+echo "Target architecture:   $TARGETARCH"
+echo "Compatible-distro:     $COMPATDISTRO"
+echo "Compat-distro version: $COMPATVERSION"
+echo
+echo -n "If these are ok, press ENTER, other CTRL-C to quit: "
+read waitforit
+
+#-------
+if [ "$COMPATVERSION_DIR" = "" ]; then
+	COMPATVERSION_DIR=woof-distro/${TARGETARCH}/${COMPATDISTRO}/${COMPATVERSION}
+	WOOF_OUT=../woof-out_${HOSTARCH}_${TARGETARCH}_${COMPATDISTRO}_${COMPATVERSION}
+else
+	WOOF_OUT=../woof-out_${HOSTARCH}_${TARGETARCH}_${COMPATDISTRO}_${COMPATVERSION_DIR##*/}
+fi
+#-------
+
+mkdir -p ${WOOF_OUT}
+echo "Choices:
+Host architecture:     $HOSTARCH
+Target architecture:   $TARGETARCH
+Compatible-distro:     $COMPATDISTRO
+Compat-distro version: $COMPATVERSION
+"  > ${WOOF_OUT}/merge2out.log
+
+echo
+echo "Directory '${WOOF_OUT}'
+has been created, if it didn't exist, and the contents of 'woof-code' will
+be copied into it. Then, these will also be copied into it:
+woof-arch/${HOSTARCH}/build
+woof-arch/${TARGETARCH}/target
+woof-distro/${TARGETARCH}/${COMPATDISTRO}  (files all levels)
+${COMPATVERSION_DIR}"
+echo
+echo "Any existing files in '${WOOF_OUT}' will be over-ridden."
+echo "(Also, all files in folders 'boot', 'packages-templates',
+ 'rootfs-skeleton', 'rootfs-packages', 'support',
+ 'kernel-kit' and 'initrd-progs' will be deleted.)"
+echo
+echo -n 'Press ENTER to continue: '
+read goforit
+
+sdirs='boot initrd-progs kernel-kit packages-templates rootfs-packages rootfs-petbuilds rootfs-skeleton support'
+
+# as files/dirs could be removed in future woofs, need to wipe entire target dirs first...
+for d in $sdirs
+do
+	if [ -d ${WOOF_OUT}/${d} ] ; then
+		echo "Deleting ${WOOF_OUT}/${d}" | tee -a ${WOOF_OUT}/merge2out.log
+		rm -rf ${WOOF_OUT}/${d} 2> /dev/null
+	fi
+done
+sync
+
+echo | tee -a ${WOOF_OUT}/merge2out.log
+echo "Copying woof-code/*..." | tee -a ${WOOF_OUT}/merge2out.log
+cp -a -f --remove-destination woof-code/* ${WOOF_OUT}/ 2>&1 | tee -a ${WOOF_OUT}/merge2out.log
+sync
+echo "Copying woof-arch/${HOSTARCH}/build/*..." | tee -a ${WOOF_OUT}/merge2out.log
+cp -a -f --remove-destination woof-arch/${HOSTARCH}/build/* ${WOOF_OUT}/ 2>&1 | tee -a ${WOOF_OUT}/merge2out.log
+sync
+echo "Copying woof-arch/${TARGETARCH}/target/*" | tee -a ${WOOF_OUT}/merge2out.log
+cp -a -f --remove-destination woof-arch/${TARGETARCH}/target/* ${WOOF_OUT}/ 2>&1 | tee -a ${WOOF_OUT}/merge2out.log
+sync
+echo "Copying kernel-kit, initrd-progs..." | tee -a ${WOOF_OUT}/merge2out.log
+cp -a -f --remove-destination kernel-kit ${WOOF_OUT}/ 2>&1 | tee -a ${WOOF_OUT}/merge2out.log
+cp -a -f --remove-destination initrd-progs ${WOOF_OUT}/ 2>&1 | tee -a ${WOOF_OUT}/merge2out.log
+sync
+echo | tee -a ${WOOF_OUT}/merge2out.log
+echo "Copying woof-distro/${TARGETARCH}/${COMPATDISTRO}/*...  (files all levels)" | tee -a ${WOOF_OUT}/merge2out.log
+echo "Copying ${COMPATVERSION_DIR}/*..." | tee -a ${WOOF_OUT}/merge2out.log
+#copy any top-level files, going down...
+for ONETOP in \
+`find woof-distro -mindepth 1 -maxdepth 1 -type f | tr '\n' ' '` \
+`find woof-distro/${TARGETARCH} -mindepth 1 -maxdepth 1 -type f | tr '\n' ' '` \
+`find woof-distro/${TARGETARCH}/${COMPATDISTRO} -mindepth 1 -maxdepth 1 -type f | tr '\n' ' '` \
+`find -L ${COMPATVERSION_DIR} -mindepth 1 -maxdepth 1 -type f | tr '\n' ' '`
+do
+	echo "    $ONETOP" >> ${WOOF_OUT}/merge2out.log
+	cp -a -f -L --remove-destination $ONETOP ${WOOF_OUT}/ 2>&1 | tee -a ${WOOF_OUT}/merge2out.log
+done
+echo | tee -a ${WOOF_OUT}/merge2out.log
+
+# merge_to_woof_out is from _00func
+. woof-code/_00func
+for ONEDIRECTORY in patches $sdirs
+do
+	[ -d "${COMPATVERSION_DIR}/${ONEDIRECTORY}" ] && merge_to_woof_out "${COMPATVERSION_DIR}/${ONEDIRECTORY}"
+done
+
+WOOF_OUT_REALPATH=$(realpath ${WOOF_OUT})
+if [ "$ALTERNATE_BUILD" != "" ];then
+	( cd "${ALTERNATE_BUILD%/*}"
+	tar -cJf ${WOOF_OUT_REALPATH}/rootfs-skeleton/root/.packages/ALTERNATE_BUILD-${ALTERNATE_BUILD##*/}.tar.xz --exclude-vcs --exclude='woof.conf' ${ALTERNATE_BUILD##*/} ) 2>&1 | tee -a ${WOOF_OUT}/merge2out.log
+fi
+if [ "$EXTRA_MERGE" != "" ];then
+	for ONEDIRECTORY in patches $sdirs
+	do
+		[ -d "${EXTRA_MERGE}/${ONEDIRECTORY}" ] && merge_to_woof_out "${EXTRA_MERGE}/${ONEDIRECTORY}"
+	done
+	for ONE_FILE in `find ${EXTRA_MERGE} -mindepth 1 -maxdepth 1 -type f | tr '\n' ' '`
+	do
+		echo "    $ONE_FILE" | tee -a ${WOOF_OUT}/merge2out.log
+		cp -a -f --remove-destination $ONE_FILE ${WOOF_OUT}/ 2>&1 | tee -a ${WOOF_OUT}/merge2out.log
+	done
+	( cd "${EXTRA_MERGE%/*}"
+	tar -cJf ${WOOF_OUT_REALPATH}/rootfs-skeleton/root/.packages/EXTRA_MERGE-${EXTRA_MERGE##*/}.tar.xz --exclude-vcs --exclude='woof.conf' ${EXTRA_MERGE##*/} ) 2>&1 | tee -a ${WOOF_OUT}/merge2out.log
+fi
+
+cp -a README.md ${WOOF_OUT}/README.md 2>&1 | tee -a ${WOOF_OUT}/merge2out.log
+sync
+
+echo "WOOF_HOSTARCH='$HOSTARCH'
+WOOF_TARGETARCH='${TARGETARCH}'
+WOOF_COMPATDISTRO='${COMPATDISTRO}'
+WOOF_COMPATVERSION='${COMPATVERSION}'" > ${WOOF_OUT}/WOOFMERGEVARS
+
+# new to avoid checkbox GUI; idea from peebee. See 3builddistro-Z
+(
+cd ${WOOF_OUT}
+rm -f support/rootfs-packages.conf-backup 2>/dev/null
+ls rootfs-packages|while read pkg;do
+	echo -e "$pkg=\"true\"" >> support/rootfs-packages.conf-backup
+done
+)
+
+if [ "`stat -c %U:%G $0`" != 'root:root' ] ; then
+	[ "${WOOF_OUT}" != "/" ] && chown -R root:root ${WOOF_OUT} 2>&1 | tee -a ${WOOF_OUT}/merge2out.log
+fi
+
+echo -e "\nUndoing VCS-friendly stuff..." | tee -a ${WOOF_OUT}/merge2out.log
+(
+cd ${WOOF_OUT}
+for d in $sdirs huge_kernel
+do
+	[ -d "${d}" ] && find $d -type f -name EMPTYDIRMARKER -delete
+done
+sync
+. ./_00func
+create_local_repos_dirs
+. ./DISTRO_SPECS
+if [ -f ./DISTRO_COMPAT_REPOS-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION} ];then
+	[ -f ./DISTRO_COMPAT_REPOS ] && rm -f ./DISTRO_COMPAT_REPOS
+fi
+) 2>&1 | tee -a ${WOOF_OUT}/merge2out.log
+
+sed -i '/WOOF_VERSION=/d' ${WOOF_OUT}/DISTRO_SPECS
+echo "WOOF_VERSION=${WOOF_VERSION}" >> ${WOOF_OUT}/DISTRO_SPECS
+
+#record target architecture in DISTRO_SPECS (will end up in /etc/ in Puppy build)...
+sed -i '/DISTRO_TARGETARCH=/d' ${WOOF_OUT}/DISTRO_SPECS
+echo "DISTRO_TARGETARCH='${TARGETARCH}'" >> ${WOOF_OUT}/DISTRO_SPECS
+
+#
+sed -i '/NO_MULTIARCH_SYMLINK=/d' ${WOOF_OUT}/DISTRO_SPECS
+echo "NO_MULTIARCH_SYMLINK=1" >> ${WOOF_OUT}/DISTRO_SPECS
+
+#record the woof state we build from
+sed -i '/BUILD_FROM_WOOF=/d' ${WOOF_OUT}/DISTRO_SPECS
+if which git &>/dev/null && [ "`git log -n 1`" != "" ]; then
+	GITBRANCH=$(git rev-parse --abbrev-ref HEAD)
+	GITHEAD=$(git log -n 1 --pretty=format:"%h;%ci") # git rev-parse HEAD
+	if [ "$ALTERNATE_BUILD" != "" -o "$EXTRA_MERGE" != "" ];then
+		echo "BUILD_FROM_WOOF='${GITBRANCH};${GITHEAD};ALTERNATE_BUILD=${ALTERNATE_BUILD##*/};EXTRA_MERGE=${EXTRA_MERGE##*/}'" >> ${WOOF_OUT}/DISTRO_SPECS
+	else
+		echo "BUILD_FROM_WOOF='${GITBRANCH};${GITHEAD}'" >> ${WOOF_OUT}/DISTRO_SPECS
+	fi
+else
+	echo "BUILD_FROM_WOOF=\"No woof-CE-git info available\"" >> ${WOOF_OUT}/DISTRO_SPECS
+fi
+
+(
+	# make sure target has these...
+	cp -afv woof-arch/${TARGETARCH}/build/support/debdb2pupdb ${WOOF_OUT}/rootfs-skeleton/usr/local/petget/ 2>&1
+	cp -afv woof-arch/${TARGETARCH}/build/support/find_cat ${WOOF_OUT}/rootfs-skeleton/usr/local/petget/ 2>&1 
+	cp -afv woof-arch/${TARGETARCH}/target/rootfs-skeleton/usr/sbin/pngoverlay-cairo ${WOOF_OUT}/support/ 2>&1
+
+	for CONFFILE in passwd shadow group; do
+		[ -e ${WOOF_OUT}/rootfs-skeleton/etc/${CONFFILE}.${COMPATDISTRO} ] && cat ${WOOF_OUT}/rootfs-skeleton/etc/${CONFFILE}.${COMPATDISTRO} > ${WOOF_OUT}/rootfs-skeleton/etc/${CONFFILE}
+		rm -f ${WOOF_OUT}/rootfs-skeleton/etc/${CONFFILE}.*
+	done
+) | tee -a ${WOOF_OUT}/merge2out.log
+
+echo
+echo "Directory '${WOOF_OUT}'
+is now normal (the workarounds have been removed). Note,
+../local-repositories has been created (if not already),
+to be used as a common binary package download place."
+
+### END ###

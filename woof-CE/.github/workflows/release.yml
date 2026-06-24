@@ -1,0 +1,93 @@
+name: release
+
+on:
+  workflow_dispatch:
+    branches:
+      - testing
+    inputs:
+      name:
+        description: 'Human-readable name'
+        required: true
+        default: 'JammyPup64 CE'
+      version:
+        description: 'Version number'
+        required: true
+        default: '10.0'
+      suffix:
+        description: 'Release name suffix, with leading -'
+        required: false
+        default: '-alpha1'
+      arch:
+        description: 'Architecture'
+        required: false
+        default: 'x86_64'
+      compat-distro:
+        description: 'Compatible distro'
+        required: false
+        default: 'ubuntu'
+      compat-distro-version:
+        description: 'Compatible distro version'
+        required: false
+        default: 'jammy64'
+      kernel:
+        description: 'Kernel version'
+        required: false
+        default: '5.15.x'
+      prefix:
+        description: 'File name prefix'
+        required: false
+        default: 'jammypup64ce'
+      release:
+        type: boolean
+        description: 'Upload release draft'
+        required: false
+      runner:
+        type: choice
+        description: 'Build environment'
+        options:
+          - ubuntu-22.04
+          - ubuntu-24.04
+        default: 'ubuntu-22.04'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      repo: ${{ github.repository }}
+      ref: ${{ github.ref }}     
+      name: ${{ github.event.inputs.name }}
+      version: ${{ github.event.inputs.version }}
+      arch: ${{ github.event.inputs.arch }}
+      compat-distro: ${{ github.event.inputs.compat-distro }}
+      compat-distro-version: ${{ github.event.inputs.compat-distro-version }}
+      kernel: ${{ github.event.inputs.kernel }}
+      prefix: ${{ github.event.inputs.prefix }}
+      artifact: ${{ github.workflow }}-${{ github.event.inputs.arch }}-${{ github.event.inputs.compat-distro }}-${{ github.event.inputs.compat-distro-version }}-${{ github.run_number }}
+      runner: ${{ github.event.inputs.runner }}
+      retention: 1
+  upload:
+    needs: build
+    if: github.repository != 'puppylinux-woof-CE/woof-CE' && github.event.inputs.release == 'true'
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ github.workflow }}-${{ github.event.inputs.arch }}-${{ github.event.inputs.compat-distro }}-${{ github.event.inputs.compat-distro-version }}-${{ github.run_number }}
+          path: .
+      - name: Generate SHA512 checksums
+        run: |
+          find . -type f -name '*.sfs' -exec sha512sum {} \; > SHA512checksums.txt
+          find . -type f -name '*.iso' -exec sha512sum {} \; >> SHA512checksums.txt
+      - name: Create Release
+        uses: softprops/action-gh-release@v3
+        with:
+          name: ${{ github.event.inputs.prefix }}-${{ github.event.inputs.version }}${{ github.event.inputs.suffix }}
+          tag_name: ${{ github.event.inputs.prefix }}-${{ github.event.inputs.version }}${{ github.event.inputs.suffix }}
+          fail_on_unmatched_files: true
+          files: |
+            *.iso
+            *.sfs
+            SHA512checksums.txt
+          draft: true
+          prerelease: false

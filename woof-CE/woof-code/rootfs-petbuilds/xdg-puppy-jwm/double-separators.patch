@@ -1,0 +1,48 @@
+diff -rupN xdg_puppy-0.7.6-9-orig/jwm-xdgmenu/jwm-xdgmenu.c xdg_puppy-0.7.6-9/jwm-xdgmenu/jwm-xdgmenu.c
+--- xdg_puppy-0.7.6-9-orig/jwm-xdgmenu/jwm-xdgmenu.c	2023-11-28 09:37:40.513771855 +0200
++++ xdg_puppy-0.7.6-9/jwm-xdgmenu/jwm-xdgmenu.c	2023-11-28 09:37:29.457802304 +0200
+@@ -111,7 +111,7 @@ show_help()
+ void
+ process_directory(GMenuTreeDirectory *directory, char *menheight, GHashTable *history)
+ {
+-	int hasSeparator = 0, first = 1;
++	int hasSeparator = 0, first = 1, hadSeparator = 0;
+ 	char *mheight = menheight;
+ 	
+   GMenuTreeItemType entryType;
+@@ -155,14 +155,16 @@ start:
+ 		case GMENU_TREE_ITEM_DIRECTORY:
+ 		  if (hasSeparator)
+ 		  {
+-				if (!first)
++				if (!first && !hadSeparator)
+ 				{
+ 					process_separator(GMENU_TREE_SEPARATOR(item));
++					hadSeparator = 1;
+ 				}
+ 				hasSeparator = 0;
+ 		  }
+ 			process_directory(GMENU_TREE_DIRECTORY(item),menheight,history);
+ 			first = 0;
++			hadSeparator = 0;
+ 			break;
+ 		case GMENU_TREE_ITEM_ENTRY:
+ 			entry = GMENU_TREE_ENTRY(item);
+@@ -173,14 +175,16 @@ start:
+ 			}
+ 			if (hasSeparator)
+ 			{
+-				if (!first)
++				if (!first && !hadSeparator)
+ 				{
+ 					process_separator(GMENU_TREE_SEPARATOR(item));
++					hadSeparator = 1;
+ 				}
+ 				hasSeparator = 0;
+ 			}
+ 			process_entry(entry);
+ 			first = 0;
++			hadSeparator = 0;
+ 			g_hash_table_insert(history, g_strdup(path), (gpointer)1);
+ 		case GMENU_TREE_ITEM_SEPARATOR:
+ 			hasSeparator = 1;

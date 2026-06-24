@@ -1,0 +1,306 @@
+diff -rupN spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8-orig/data/Makefile.am spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8/data/Makefile.am
+--- spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8-orig/data/Makefile.am	2023-06-14 16:41:14.487322432 +0300
++++ spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8/data/Makefile.am	2023-06-14 16:59:31.018783819 +0300
+@@ -13,7 +13,6 @@ if NO_PIXMAPS
+ icon48dir = $(datadir)/icons/hicolor/48x48/apps
+ icon48_DATA = \
+ 			spacefm.png \
+-			spacefm-root.png \
+ 			spacefm-find.png \
+ 			spacefm-48-cube-blue.png \
+ 			spacefm-48-cube-green.png \
+@@ -36,13 +35,11 @@ icon128_DATA = \
+ faenzadir = $(datadir)/icons/Faenza/apps/48
+ faenza_DATA = \
+ 			faenza/spacefm.png \
+-			faenza/spacefm-root.png \
+ 			faenza/spacefm-find.png
+ else
+ icondir = $(datadir)/pixmaps
+ icon_DATA = \
+ 			spacefm.png \
+-			spacefm-root.png \
+ 			spacefm-find.png \
+ 			spacefm-128-cube-blue.png \
+ 			spacefm-128-cube-green.png \
+diff -rupN spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8-orig/data/Makefile.in spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8/data/Makefile.in
+--- spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8-orig/data/Makefile.in	2023-06-14 16:41:14.487322432 +0300
++++ spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8/data/Makefile.in	2023-06-14 16:59:31.018783819 +0300
+@@ -318,7 +318,6 @@ DISTCLEANFILES = spacefm.desktop \
+ @NO_PIXMAPS_TRUE@icon48dir = $(datadir)/icons/hicolor/48x48/apps
+ @NO_PIXMAPS_TRUE@icon48_DATA = \
+ @NO_PIXMAPS_TRUE@			spacefm.png \
+-@NO_PIXMAPS_TRUE@			spacefm-root.png \
+ @NO_PIXMAPS_TRUE@			spacefm-find.png \
+ @NO_PIXMAPS_TRUE@			spacefm-48-cube-blue.png \
+ @NO_PIXMAPS_TRUE@			spacefm-48-cube-green.png \
+@@ -341,13 +340,11 @@ DISTCLEANFILES = spacefm.desktop \
+ @NO_PIXMAPS_TRUE@faenzadir = $(datadir)/icons/Faenza/apps/48
+ @NO_PIXMAPS_TRUE@faenza_DATA = \
+ @NO_PIXMAPS_TRUE@			faenza/spacefm.png \
+-@NO_PIXMAPS_TRUE@			faenza/spacefm-root.png \
+ @NO_PIXMAPS_TRUE@			faenza/spacefm-find.png
+ 
+ @NO_PIXMAPS_FALSE@icondir = $(datadir)/pixmaps
+ @NO_PIXMAPS_FALSE@icon_DATA = \
+ @NO_PIXMAPS_FALSE@			spacefm.png \
+-@NO_PIXMAPS_FALSE@			spacefm-root.png \
+ @NO_PIXMAPS_FALSE@			spacefm-find.png \
+ @NO_PIXMAPS_FALSE@			spacefm-128-cube-blue.png \
+ @NO_PIXMAPS_FALSE@			spacefm-128-cube-green.png \
+diff -rupN spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8-orig/src/main-window.c spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8/src/main-window.c
+--- spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8-orig/src/main-window.c	2023-06-14 16:41:14.503322416 +0300
++++ spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8/src/main-window.c	2023-06-14 16:59:31.018783819 +0300
+@@ -1011,8 +1011,6 @@ void update_window_icon( GtkWindow* wind
+     XSet* set = xset_get( "main_icon" );
+     if ( set->icon )
+         name = set->icon;
+-    else if ( geteuid() == 0 )
+-        name = "spacefm-root";
+     else
+         name = "spacefm";
+     
+@@ -1586,10 +1584,7 @@ void show_panels( GtkMenuItem* item, FMM
+                                 folder_path = tab_dir;
+                             else if ( !( folder_path = xset_get_s( "go_set_default" ) ) )
+                             {
+-                                if ( geteuid() != 0 )
+-                                    folder_path = g_get_home_dir();
+-                                else
+-                                    folder_path = "/";
++                                folder_path = g_get_home_dir();
+                             }
+                             fm_main_window_add_new_tab( main_window, folder_path );
+                             tab_added = TRUE;
+@@ -1624,10 +1619,7 @@ void show_panels( GtkMenuItem* item, FMM
+                     // open default tab
+                     if ( !( folder_path = xset_get_s( "go_set_default" ) ) )
+                     {
+-                        if ( geteuid() != 0 )
+-                            folder_path = g_get_home_dir();
+-                        else
+-                            folder_path = "/";
++                        folder_path = g_get_home_dir();
+                     }
+                     fm_main_window_add_new_tab( main_window, folder_path );
+                 }
+@@ -2671,10 +2663,7 @@ void on_close_notebook_page( GtkButton*
+         const char* path = xset_get_s( "go_set_default" );
+         if ( !( path && path[0] != '\0' ) )
+         {
+-            if ( geteuid() != 0 )
+-                path =  g_get_home_dir();
+-            else
+-                path = "/";
++            path =  g_get_home_dir();
+         }
+         fm_main_window_add_new_tab( main_window, path );
+         a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( 
+@@ -3205,8 +3194,6 @@ on_about_activate ( GtkMenuItem *menuite
+         XSet* set = xset_get( "main_icon" );
+         if ( set->icon )
+             name = set->icon;
+-        else if ( geteuid() == 0 )
+-            name = "spacefm-root";
+         else
+             name = "spacefm";
+         gtk_about_dialog_set_logo_icon_name( GTK_ABOUT_DIALOG ( about_dlg ), name );
+diff -rupN spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8-orig/src/ptk/ptk-file-browser.c spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8/src/ptk/ptk-file-browser.c
+--- spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8-orig/src/ptk/ptk-file-browser.c	2023-06-14 16:41:14.503322416 +0300
++++ spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8/src/ptk/ptk-file-browser.c	2023-06-14 16:59:31.022783816 +0300
+@@ -2865,11 +2865,8 @@ void ptk_file_browser_go_default( GtkWid
+     if ( path && path[0] != '\0' )
+         ptk_file_browser_chdir( PTK_FILE_BROWSER( file_browser ), path,
+                                                     PTK_FB_CHDIR_ADD_HISTORY );
+-    else if ( geteuid() != 0 )
+-        ptk_file_browser_chdir( PTK_FILE_BROWSER( file_browser ), g_get_home_dir(),
+-                                                    PTK_FB_CHDIR_ADD_HISTORY );
+     else
+-        ptk_file_browser_chdir( PTK_FILE_BROWSER( file_browser ), "/",
++        ptk_file_browser_chdir( PTK_FILE_BROWSER( file_browser ), g_get_home_dir(),
+                                                     PTK_FB_CHDIR_ADD_HISTORY );
+ }
+
+diff -rupN spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8-orig/src/ptk/ptk-location-view.c spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8/src/ptk/ptk-location-view.c
+--- spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8-orig/src/ptk/ptk-location-view.c	2023-06-14 16:41:14.503322416 +0300
++++ spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8/src/ptk/ptk-location-view.c	2023-06-14 16:59:31.022783816 +0300
+@@ -3361,6 +3361,9 @@ gboolean volume_is_visible( VFSVolume* v
+     if ( vol->device_type == DEVICE_TYPE_OTHER )
+         return xset_get_b( "dev_show_file" );
+     
++    if ( g_str_has_prefix( vol->device_file, "/dev/zram" ) )
++        return FALSE;
++    
+     // loop
+     if ( g_str_has_prefix( vol->device_file, "/dev/loop" ) )
+     {
+@@ -3368,7 +3371,7 @@ gboolean volume_is_visible( VFSVolume* v
+             return TRUE;
+         if ( !vol->is_mountable && !vol->is_mounted )
+             return FALSE;
+-        // fall through
++        return xset_get_b( "dev_show_file" );
+     }
+     
+     // ramfs CONFIG_BLK_DEV_RAM causes multiple entries of /dev/ram*
+diff -rupN spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8-orig/src/settings.c spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8/src/settings.c
+--- spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8-orig/src/settings.c	2023-06-14 16:41:14.503322416 +0300
++++ spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8/src/settings.c	2023-06-14 16:59:51.210768859 +0300
+@@ -61,8 +61,8 @@ const int big_icon_size_default = 48;
+ const int max_icon_size = 512;
+ const int small_icon_size_default = 22;
+ const int tool_icon_size_default = 0;
+-const gboolean single_click_default = FALSE;
+-const gboolean no_single_hover_default = FALSE;
++const gboolean single_click_default = TRUE;
++const gboolean no_single_hover_default = TRUE;
+ 
+ /* FIXME: temporarily disable trash since it's not finished */
+ const gboolean use_trash_can_default = FALSE;
+@@ -84,14 +84,14 @@ const gboolean show_wm_menu_default = FA
+ const gboolean desk_single_click_default = FALSE;
+ const gboolean desk_no_single_hover_default = FALSE;
+ const gboolean desk_open_mime_default = FALSE;
+-const int margin_top_default = 12;
++const int margin_top_default = 6;
+ const int margin_left_default = 6;
+ const int margin_right_default = 6;
+-const int margin_bottom_default = 12;
++const int margin_bottom_default = 6;
+ const int margin_pad_default = 6;
+ 
+ /* Default values of interface settings */
+-const gboolean always_show_tabs_default = TRUE;
++const gboolean always_show_tabs_default = FALSE;
+ const gboolean hide_close_tab_buttons_default = FALSE;
+ const gboolean hide_side_pane_buttons_default = FALSE;
+ //const gboolean hide_folder_content_border_default = FALSE;
+@@ -366,7 +366,7 @@ static void parse_window_state( char* li
+     if ( 0 == strcmp( name, "height" ) )
+     {
+         v = atoi( value );
+-        app_settings.height = ( v > 0 ? v : 480 );
++        app_settings.height = ( v > 0 ? v : 301 );
+     }
+     if ( 0 == strcmp( name, "maximized" ) )
+     {
+@@ -637,6 +637,8 @@ void load_settings( char* config_dir )
+     app_settings.desktop_sort_by = desktop_sort_by_default;
+     app_settings.desktop_sort_type = desktop_sort_type_default;
+     app_settings.show_wm_menu = show_wm_menu_default;
++    app_settings.single_click = single_click_default;
++    app_settings.no_single_hover = no_single_hover_default;
+     app_settings.desk_single_click = desk_single_click_default;
+     app_settings.desk_no_single_hover = desk_no_single_hover_default;
+     app_settings.desk_open_mime = desk_open_mime_default;
+@@ -663,7 +665,7 @@ void load_settings( char* config_dir )
+     app_settings.use_si_prefix = use_si_prefix_default;
+     //app_settings.show_location_bar = show_location_bar_default;
+     //app_settings.home_folder = NULL;   //MOD
+-    app_settings.no_execute = TRUE;   //MOD
++    app_settings.no_execute = FALSE;   //MOD
+     app_settings.no_confirm = FALSE;   //MOD
+     app_settings.date_format = NULL;   //MOD
+     
+@@ -676,7 +678,7 @@ void load_settings( char* config_dir )
+     /* Window State */
+     //app_settings.splitter_pos = 160;
+     app_settings.width = 640;
+-    app_settings.height = 480;
++    app_settings.height = 301;
+ 
+     // MOD extra settings
+     xset_defaults();
+@@ -10458,8 +10460,6 @@ void xset_set_window_icon( GtkWindow* wi
+     XSet* set = xset_get( "main_icon" );
+     if ( set->icon )
+         name = set->icon;
+-    else if ( geteuid() == 0 )
+-        name = "spacefm-root";
+     else
+         name = "spacefm";
+     GtkIconTheme* theme = gtk_icon_theme_get_default();
+@@ -10932,7 +10932,6 @@ void xset_defaults()
+         set = xset_set( "dev_show_file", "lbl", _("Mounted _Other") );
+         set->menu_style = XSET_MENU_CHECK;
+         set->line = g_strdup( "#devices-settings-files" );
+-        set->b = XSET_B_TRUE;
+ 
+         set = xset_set( "dev_show_hide_volumes", "lbl", _("_Volumes...") );
+         xset_set_set( set, "title", _("Show/Hide Volumes") );
+@@ -10958,12 +10959,12 @@ void xset_defaults()
+     set->line = g_strdup( "#devices-settings-optical" );
+ 
+         set = xset_set( "dev_automount_optical", "lbl", _("Mount _Optical") );
+-        set->b = geteuid() == 0 ? XSET_B_FALSE : XSET_B_TRUE;
++        set->b = XSET_B_FALSE;
+         set->menu_style = XSET_MENU_CHECK;
+         set->line = g_strdup( "#devices-settings-optical" );
+ 
+         set = xset_set( "dev_automount_removable", "lbl", _("_Mount Removable") );
+-        set->b = geteuid() == 0 ? XSET_B_FALSE : XSET_B_TRUE;
++        set->b = XSET_B_FALSE;
+         set->menu_style = XSET_MENU_CHECK;
+         set->line = g_strdup( "#devices-settings-remove" );
+ 
+@@ -11353,7 +11354,7 @@ void xset_defaults()
+ 
+     set = xset_set( "main_save_tabs", "lbl", _("Save Ta_bs") );
+     set->menu_style = XSET_MENU_CHECK;
+-    set->b = XSET_B_TRUE;
++    set->b = XSET_B_FALSE;
+ 
+     set = xset_set( "main_exit", "lbl", _("E_xit") );
+     xset_set_set( set, "icn", "gtk-quit" );
+@@ -11405,7 +11406,6 @@ void xset_defaults()
+ 
+     set = xset_set( "main_pbar", "lbl", _("Panel _Bar") );
+     set->menu_style = XSET_MENU_CHECK;
+-    set->b = XSET_B_TRUE;
+     set->line = g_strdup( "#gui-pan" );
+ 
+     set = xset_set( "main_focus_panel", "lbl", _("F_ocus") );
+@@ -11581,7 +11579,7 @@ void xset_defaults()
+     set->menu_style = XSET_MENU_SUBMENU;
+ 
+     set = xset_get( "root_bar" );  // in Preferences
+-    set->b = XSET_B_TRUE;
++    set->b = XSET_B_FALSE;
+ 
+     set = xset_set( "view_thumb", "lbl", _("_Thumbnails (global)") );  // in View|Panel View|Style
+     set->menu_style = XSET_MENU_CHECK;
+@@ -12591,7 +12589,6 @@ void xset_defaults()
+ 
+         set = xset_set_panel( p, "list_detailed", "lbl", _("_Detailed") );
+         set->menu_style = XSET_MENU_RADIO;
+-        set->b = XSET_B_TRUE;
+         if ( p != 1 )
+             xset_set_set( set, "shared_key", "panel1_list_detailed" );
+ 
+@@ -12602,6 +12601,7 @@ void xset_defaults()
+ 
+         set = xset_set_panel( p, "list_compact", "lbl", _("_Compact") );
+         set->menu_style = XSET_MENU_RADIO;
++        set->b = XSET_B_TRUE;
+         if ( p != 1 )
+             xset_set_set( set, "shared_key", "panel1_list_compact" );
+ 
+diff -rupN spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8-orig/src/settings.h spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8/src/settings.h
+--- spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8-orig/src/settings.h	2023-06-14 16:41:14.503322416 +0300
++++ spacefm-e6f291858067e73db44fb57c90e4efb97b088ac8/src/settings.h	2023-06-14 16:59:31.026783813 +0300
+@@ -330,6 +330,7 @@ extern GList* xset_cmd_history;
+ 
+ static const char* terminal_programs[] =  //for pref-dialog.c
+ {
++    "defaultterminal",
+     "roxterm",
+     "terminal",
+     "xfce4-terminal",
+@@ -359,6 +360,7 @@ static const char* su_commands[] = // or
+ 
+ static const char* gsu_commands[] = // order and contents must match prefdlg.ui
+ {
++    "/usr/bin/pkexec",
+     "/usr/bin/gksu",
+     "/usr/bin/gksudo",
+     "/usr/bin/gnomesu",

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=CD/DVD burner
+Icon=/usr/share/pixmaps/puppy/cd_burn.svg
+Comment=Burn iso to CD/DVD
+Exec=burniso2cd
+Terminal=false
+Type=Application
+Categories=DiskBurning
+GenericName=CD/DVD recorder

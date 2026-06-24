@@ -1,0 +1,5 @@
+#!/bin/bash
+#Backward compatability for changed name.
+#230928 BK: /usr/local/network-wizard/rc.network renamed to rc.wiznetwork.
+
+exec /usr/local/network-wizard/rc.wiznetwork "$@"

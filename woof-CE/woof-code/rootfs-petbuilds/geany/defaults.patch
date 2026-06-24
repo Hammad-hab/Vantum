@@ -1,0 +1,44 @@
+diff -rup geany-2.0-orig/data/filedefs/filetypes.common geany-2.0/data/filedefs/filetypes.common
+--- geany-2.0-orig/data/filedefs/filetypes.common	2024-01-23 19:57:19.547929772 +0530
++++ geany-2.0/data/filedefs/filetypes.common	2024-01-23 19:58:50.975672875 +0530
+@@ -87,7 +87,7 @@ line_wrap_indent=0;1;
+ 
+ # first argument: amount of space to be drawn above the line's baseline
+ # second argument: amount of space to be drawn below the line's baseline
+-line_height=0;0;
++line_height=0;2;
+ 
+ # 3rd argument is true to override default foreground of calltips
+ # 4th argument is true to override default background of calltips
+diff -rup geany-2.0-orig/src/keyfile.c geany-2.0/src/keyfile.c
+--- geany-2.0-orig/src/keyfile.c	2024-01-23 19:57:19.495927729 +0530
++++ geany-2.0/src/keyfile.c	2024-01-23 20:03:03.679037613 +0530
+@@ -83,7 +83,7 @@
+ #elif defined(__APPLE__)
+ #define GEANY_DEFAULT_TOOLS_TERMINAL	"open -a terminal %c"
+ #else
+-#define GEANY_DEFAULT_TOOLS_TERMINAL	"xterm -e \"/bin/sh %c\""
++#define GEANY_DEFAULT_TOOLS_TERMINAL	"defaultterminal -e /bin/sh %c"
+ #endif
+ #ifdef __APPLE__
+ #define GEANY_DEFAULT_TOOLS_BROWSER		"open -a safari"
+@@ -92,7 +92,7 @@
+ #define GEANY_DEFAULT_FONT_EDITOR		"Menlo Medium 12"
+ #else
+ /* Browser chosen by GTK */
+-#define GEANY_DEFAULT_TOOLS_BROWSER		""
++#define GEANY_DEFAULT_TOOLS_BROWSER		"defaultbrowser"
+ #define GEANY_DEFAULT_FONT_SYMBOL_LIST	"Sans 9"
+ #define GEANY_DEFAULT_FONT_MSG_WINDOW	"Monospace 9"
+ #define GEANY_DEFAULT_FONT_EDITOR		"Monospace 10"
+@@ -1091,8 +1091,8 @@ static void load_dialog_prefs(GKeyFile *
+ 
+ static void load_ui_prefs(GKeyFile *config)
+ {
+-	ui_prefs.sidebar_visible = utils_get_setting_boolean(config, PACKAGE, "sidebar_visible", TRUE);
+-	ui_prefs.msgwindow_visible = utils_get_setting_boolean(config, PACKAGE, "msgwindow_visible", TRUE);
++	ui_prefs.sidebar_visible = utils_get_setting_boolean(config, PACKAGE, "sidebar_visible", FALSE);
++	ui_prefs.msgwindow_visible = utils_get_setting_boolean(config, PACKAGE, "msgwindow_visible", FALSE);
+ 	ui_prefs.fullscreen = utils_get_setting_boolean(config, PACKAGE, "fullscreen", FALSE);
+ 	ui_prefs.symbols_group_by_type = utils_get_setting_boolean(config, PACKAGE, "symbols_group_by_type", TRUE);
+ 	ui_prefs.custom_date_format = utils_get_setting_string(config, PACKAGE, "custom_date_format", "");
