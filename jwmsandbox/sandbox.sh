@@ -1,29 +1,24 @@
 #!/bin/bash
-
-# Requires SAMPLE_JWMRC to be set in your .bashrc
-# Example: export SAMPLE_JWMRC="/mnt/c/Users/hamma/Documents/Hammad/BeasOS/jwmsandbox/sample.jwmrc"
+set +x
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG="$SAMPLE_JWMRC"
 
-# Kill existing JWM and Xephyr on :1 if running
+# Replace JWMSANDBOX_DIR placeholder with actual path
+sed "s|JWMSANDBOX_DIR|$SCRIPT_DIR|g" "$CONFIG" > /tmp/jwm_resolved.jwmrc
+
 pkill -f "Xephyr :1" 2>/dev/null
 pkill jwm 2>/dev/null
 sleep 0.5
 
-# Start Xephyr
 Xephyr :1 -screen 1280x720 &
 sleep 1
 
-# Start JWM with config
-DISPLAY=:1 jwm -f "$CONFIG" &
+DISPLAY=:1 jwm -f /tmp/jwm_resolved.jwmrc &
 sleep 0.5
 
-# Start a terminal inside
 DISPLAY=:1 xterm &
-
-echo "JWM running on :1"
-echo "Config: $CONFIG"
-echo ""
-echo "To restart JWM with new config:"
-echo "  DISPLAY=:1 jwm -f $CONFIG"
-echo "To validate config:"
-echo "  DISPLAY=:1 jwm -p -f $CONFIG"
+DISPLAY=:1 xeyes &
+DISPLAY=:1 xload &
+DISPLAY=:1 xterm &
+# DISPLAY=:1 python3 src/beasdock.py &
+set -x
