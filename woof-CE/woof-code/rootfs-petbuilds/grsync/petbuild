@@ -1,7 +1,9 @@
 download() {
-    [ -f grsync-1.3.0.tar.gz ] || wget -t 3 -T 60 https://sourceforge.net/projects/grsync/files/grsync-1.3.0.tar.gz/download
+    [ -f grsync-1.3.0.tar.gz ] || \
+        wget -t 3 -T 60 \
+        -O grsync-1.3.0.tar.gz \
+        "https://sourceforge.net/projects/grsync/files/grsync-1.3.0.tar.gz/download"
 }
-
 build() {
     tar -xzf grsync-1.3.0.tar.gz
     cd grsync-1.3.0
