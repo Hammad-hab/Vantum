@@ -128,7 +128,7 @@
 	<Foreground>black</Foreground>
 	<Background>yellow</Background>
 </PopupStyle>
-:
+
 <!-- <Icons> -->
 <IconPath>/usr/share/pixmaps</IconPath>
 <IconPath>/usr/share/icons/hicolor/48x48/apps</IconPath>

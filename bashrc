@@ -3,7 +3,7 @@
 . /etc/profile
 
 PS1="run_woof\\$ "
-
+echo "Welcome to run_woof"
 cd /root/share
 
 # CHECK_FOR_UPDATES and MERGE_UPDATES are defined in run_woof.conf

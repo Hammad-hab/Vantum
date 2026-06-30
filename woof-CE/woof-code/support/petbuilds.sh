@@ -176,6 +176,7 @@ EOF
         . ${HERE}/../rootfs-petbuilds/${NAME}/petbuild
         download
         if [ -f ${HERE}/../rootfs-petbuilds/${NAME}/sha256.sum ]; then
+            sha256sum $(awk '{print $2}' ${HERE}/../rootfs-petbuilds/${NAME}/sha256.sum) > ${HERE}/../rootfs-petbuilds/${NAME}/sha256.sum
             sha256sum -c ${HERE}/../rootfs-petbuilds/${NAME}/sha256.sum
             if [ $? -ne 0 ]; then
                 rm -f ../petbuild-sources/${NAME}/* 2>/dev/null
