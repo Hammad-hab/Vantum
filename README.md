@@ -1,14 +1,14 @@
-# BeasOS
+# Vantum
 
 **A lean, fast, custom Linux distribution built on Puppy Linux and Ubuntu Jammy.**
 
 ---
 
-## What is BeasOS?
+## What is Vantum?
 
-BeasOS is a custom Linux distribution built from the ground up using [Woof-CE](https://github.com/puppylinux-woof-CE/woof-CE) — the official Puppy Linux build system — targeting Ubuntu Jammy (22.04) as its package source. It inherits everything that makes Puppy Linux great: a tiny footprint, the ability to run entirely from RAM, a lightning-fast boot, and a complete desktop environment that works on modest hardware — while layering on a custom look, feel, and toolset that makes it distinctly its own.
+Vantum is a custom Linux distribution built from the ground up using [Woof-CE](https://github.com/puppylinux-woof-CE/woof-CE) — the official Puppy Linux build system — targeting Ubuntu Jammy (22.04) as its package source. It inherits everything that makes Puppy Linux great: a tiny footprint, the ability to run entirely from RAM, a lightning-fast boot, and a complete desktop environment that works on modest hardware — while layering on a custom look, feel, and toolset that makes it distinctly its own.
 
-This is not a remaster or a respin. BeasOS is compiled from source, assembled package by package, and built with deliberate decisions about what goes in and what stays out.
+This is not a remaster or a respin. Vantum is compiled from source, assembled package by package, and built with deliberate decisions about what goes in and what stays out.
 
 ---
 
@@ -20,7 +20,7 @@ Ubuntu Jammy (22.04 LTS) was chosen as the package base because it hits a sweet 
 
 ---
 
-## What makes BeasOS different?
+## What makes Vantum different?
 
 - **Custom JWM configuration** — the window manager is tuned with a specific panel layout, keybindings, and theme out of the box
 - **Custom GTK appearance** — a cohesive visual identity applied from first boot, not something you configure afterward
@@ -49,13 +49,13 @@ Ubuntu Jammy (22.04 LTS) was chosen as the package base because it hits a sweet 
 ```
 woof-CE/
 ├── woof-code/
-│   ├── rootfs-skeleton/        ← BeasOS UI customisations (JWM, GTK, themes)
+│   ├── rootfs-skeleton/        ← Vantum UI customisations (JWM, GTK, themes)
 │   ├── rootfs-petbuilds/       ← Custom launcher and other compiled-from-source packages
 │   └── support/
 │       ├── petbuilds.sh        ← Patched: ccache removed, non-fatal petbuild exits
 │       └── huge_kernel.sh      ← Patched: KERNEL_REPO_URL variable bug fixed
 └── woof-distro/x86_64/ubuntu/jammy64/
-    └── _00build.conf           ← BeasOS-specific build config (SFS compression, PETBUILDS list)
+    └── _00build.conf           ← Vantum-specific build config (SFS compression, PETBUILDS list)
 ```
 
 ---
@@ -101,16 +101,16 @@ The output ISO will appear in `woof-output/` when the build completes.
 
 ## Debugging
 
-Building a custom Linux distribution is not a smooth process. `DEBUG.md` in this repository documents every issue encountered during BeasOS's initial build — 12 distinct failures, their root causes, and their fixes — covering everything from wrong base Puppy selection and broken ccache binaries to BusyBox checksum parser quirks and overlayfs layer visibility bugs. It's intended as a reference for anyone building on this codebase or attempting a similar Woof-CE build on a modern host.
+Building a custom Linux distribution is not a smooth process. `DEBUG.md` in this repository documents every issue encountered during Vantum's initial build — 12 distinct failures, their root causes, and their fixes — covering everything from wrong base Puppy selection and broken ccache binaries to BusyBox checksum parser quirks and overlayfs layer visibility bugs. It's intended as a reference for anyone building on this codebase or attempting a similar Woof-CE build on a modern host.
 
 ---
 
 ## Status
 
-BeasOS is actively in development. The base build is working. UI customisation, the custom launcher, and theme work are ongoing.
+Vantum is actively in development. The base build is working. UI customisation, the custom launcher, and theme work are ongoing.
 
 ---
 
 ## License
 
-BeasOS is built on Puppy Linux and Ubuntu packages. All third-party components retain their original licenses. Custom code and configuration in this repository is released under the MIT License.
+Vantum is built on Puppy Linux and Ubuntu packages. All third-party components retain their original licenses. Custom code and configuration in this repository is released under the MIT License.
