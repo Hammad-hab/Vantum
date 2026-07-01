@@ -29,8 +29,7 @@ prepend_grub() {
 	cat > $outfile <<EOF
 
 loadfont /boot/grub/font.pf2
-set gfxmode=800x600
-set gfxpayload=keep
+set gfxmode=auto
 
 insmod efi_gop
 insmod efi_uga
