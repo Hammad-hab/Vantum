@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<JWM>
+
+  <WindowStyle>
+    <Font>Cantarell-10</Font>
+    <Width>3</Width>
+    <Height>30</Height>
+    <Corner>5</Corner>
+    <Foreground>#a1a9b1</Foreground>
+    <Background>#1f2227</Background>
+    <Outline>#1a1d22</Outline>
+    <Active>
+      <Foreground>#fcfcfc</Foreground>
+      <Background>#2a2f38</Background>
+      <Outline>#1a1d22</Outline>
+    </Active>
+  </WindowStyle>
+
+  <TrayStyle>
+    <Font>DejaVu Sans-10</Font>
+    <Foreground>#a8a8a8</Foreground>
+    <Background>#1a1d22</Background>
+    <Outline>#1a1d22</Outline>
+    <Active>
+      <Foreground>#ffffff</Foreground>
+      <Background>#252a32</Background>
+    </Active>
+  </TrayStyle>
+
+  <PagerStyle>
+    <Outline>#1a1d22</Outline>
+    <Foreground>#d0d0d0</Foreground>
+    <Background>#2a2f38</Background>
+    <Active>
+      <Foreground>#1f2227</Foreground>
+      <Background>#4a90e2</Background>   <!-- subtle blue accent for active pager -->
+    </Active>
+  </PagerStyle>
+
+  <PopupStyle>
+    <Font>DejaVu Sans-10</Font>
+    <Outline>#1a1d22</Outline>
+    <Foreground>#e0e0e0</Foreground>
+    <Background>#1a1d22</Background>
+  </PopupStyle>
+
+  <MenuStyle>
+    <Font>DejaVu Sans-10</Font>
+    <Foreground>#a8a8a8</Foreground>
+    <Background>#1f2227</Background>
+    <Outline>#1a1d22</Outline>
+    <Active>
+      <Foreground>#fcfcfc</Foreground>
+      <Background>#2a2f38</Background>
+    </Active>
+  </MenuStyle>
+
+</JWM>

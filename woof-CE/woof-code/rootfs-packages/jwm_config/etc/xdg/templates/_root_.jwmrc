@@ -203,7 +203,6 @@
 
 
 <!-- Include external rc files -->
-<Include>/root/.jwm/jwmrc-tray1</Include>
 <Include>/root/.jwm/jwmrc-tray2</Include>
 <Include>/root/.jwm/jwmrc-tray3</Include>
 <Include>/root/.jwm/jwmrc-tray4</Include>
