@@ -145,10 +145,9 @@ sleep 1 # let the dust settle
 case $desktop in
  pcmanfm) pcmanfm --desktop & ;;
  rox)
-	if [ -f /root/Choices/ROX-Filer/PuppyPan1 ];then
-	#	roxfiler -p /root/Choices/ROX-Filer/PuppyPin -r /root/Choices/ROX-Filer/PuppyPan1
-	else
-	#	roxfiler -p /root/Choices/ROX-Filer/PuppyPin
+	if [ -f /root/.config/wallpaper/bg_img ]; then
+		BG=$(cat /root/.config/wallpaper/bg_img)
+		hsetroot -cover "$BG" &
 	fi
 	;;
 esac
