@@ -830,10 +830,22 @@ clear #clear the screen.
 
 [ "$ZBOOTMENU" ] && . /sbin/init-bootmenu
 
-echo -en "\\033[0;34m***\\033[0;37m ${DISTRO_NAME} ${DISTRO_VERSION}"
-echo -en "\\033[0;34m -\\033[0;37m Linux ${KERNELVER} "
-echo -en "\\033[0;31m[\\033[0;37m`uname -m`\\033[0;31m]"
-echo -e "\\033[0;34m ***\\033[0;39m"
+# echo -en "\\033[0;34m***\\033[0;37m ${DISTRO_NAME} ${DISTRO_VERSION}"
+# echo -en "\\033[0;34m -\\033[0;37m Linux ${KERNELVER} "
+# echo -en "\\033[0;31m[\\033[0;37m`uname -m`\\033[0;31m]"
+# echo -e "\\033[0;34m ***\\033[0;39m"
+
+cat << 'EOF'
+ ___      ___ ________  ________   _________  ___  ___  _____ ______      
+|\  \    /  /|\   __  \|\   ___  \|\___   ___\\  \|\  \|\   _ \  _   \    
+\ \  \  /  / | \  \|\  \ \  \\ \  \|___ \  \_\ \  \\\  \ \  \\\__\ \  \   
+ \ \  \/  / / \ \   __  \ \  \\ \  \   \ \  \ \ \  \\\  \ \  \\|__| \  \  
+  \ \    / /   \ \  \ \  \ \  \\ \  \   \ \  \ \ \  \\\  \ \  \    \ \  \ 
+   \ \__/ /     \ \__\ \__\ \__\\ \__\   \ \__\ \ \_______\ \__\    \ \__\
+    \|__|/       \|__|\|__|\|__| \|__|    \|__|  \|_______|\|__|     \|__|
+EOF                                                                       
+echo "Beginning boot...";                                                          
+                                                                          
 
 [ "$LOGLEVEL" -eq 7 ] && set -x
 [ "$LOGLEVEL" -le 3 -o "$LOGLEVEL" -eq 7 ] && exec 1>/tmp/bootinit.log 2>&1 #remove o/p from console. v2.22 loglevel added.
