@@ -144,5 +144,5 @@ else
 	LANG=C \
 	HOME=/root \
 	XAUTHORITY=/root/.Xauthority \
-	linux32 chroot $AUFS_MNT /bin/bash -ic 'cd /root && exec /bin/bash -i'
+	linux32 chroot $AUFS_MNT /bin/bash -ic 'cd /root/share && echo "You are now entering run_woof shell $1" && exec /bin/bash -i '
 fi
