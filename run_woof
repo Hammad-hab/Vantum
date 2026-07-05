@@ -135,7 +135,7 @@ if [ "${2#*64_}" != "$2" ]; then
 	LANG=C \
 	HOME=/root \
 	XAUTHORITY=/root/.Xauthority \
-	chroot $AUFS_MNT /bin/bash -i
+	chroot $AUFS_MNT /bin/bash -ic 'cd /root && exec /bin/bash -i'
 else
 	linux32 chroot $AUFS_MNT \
 		gdk-pixbuf-query-loaders --update-cache
@@ -144,5 +144,5 @@ else
 	LANG=C \
 	HOME=/root \
 	XAUTHORITY=/root/.Xauthority \
-	linux32 chroot $AUFS_MNT /bin/bash -i
+	linux32 chroot $AUFS_MNT /bin/bash -ic 'cd /root && exec /bin/bash -i'
 fi
