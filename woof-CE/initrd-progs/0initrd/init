@@ -843,9 +843,8 @@ cat << 'EOF'
   \ \    / /   \ \  \ \  \ \  \\ \  \   \ \  \ \ \  \\\  \ \  \    \ \  \ 
    \ \__/ /     \ \__\ \__\ \__\\ \__\   \ \__\ \ \_______\ \__\    \ \__\
     \|__|/       \|__|\|__|\|__| \|__|    \|__|  \|_______|\|__|     \|__|
-EOF                                                                       
-echo "Beginning boot...";                                                          
-                                                                          
+EOF
+echo "Beginning boot...";                                               
 
 [ "$LOGLEVEL" -eq 7 ] && set -x
 [ "$LOGLEVEL" -le 3 -o "$LOGLEVEL" -eq 7 ] && exec 1>/tmp/bootinit.log 2>&1 #remove o/p from console. v2.22 loglevel added.
