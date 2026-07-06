@@ -1,12 +1,12 @@
 #!/bin/bash
 # new for fatdog style kernel
-echo "Checking for improper curl issues..."
-if curl 2>&1 | grep -q "no version information available"; then
-	echo "Curl issue detected, copying libcurl..."
-    cp /usr/lib/x86_64-linux-gnu/libcurl.so.4.6.0 /usr/lib/libcurl.so.4.6.0
-    ln -sf libcurl.so.4.6.0 /usr/lib/libcurl.so.4
-else 
-	echo "No curl issue detected. Continuing to 3builddistro"
+echo "Checking for curl library issues..."
+CURL_LIB=$(find /usr/lib/x86_64-linux-gnu -name "libcurl.so.4.*" | sort | tail -1)
+if [ -n "$CURL_LIB" ] && [ ! -f /usr/lib/$(basename $CURL_LIB) ]; then
+    echo "Copying $CURL_LIB to /usr/lib/"
+    cp "$CURL_LIB" /usr/lib/
+    ln -sf $(basename $CURL_LIB) /usr/lib/libcurl.so.4
+    echo "Done."
 fi
 
 export LANG=C #faster.
