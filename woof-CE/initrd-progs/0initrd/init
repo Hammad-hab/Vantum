@@ -836,13 +836,23 @@ clear #clear the screen.
 # echo -e "\\033[0;34m ***\\033[0;39m"
 
 cat << 'EOF'
- ___      ___ ________  ________   _________  ___  ___  _____ ______      
-|\  \    /  /|\   __  \|\   ___  \|\___   ___\\  \|\  \|\   _ \  _   \    
-\ \  \  /  / | \  \|\  \ \  \\ \  \|___ \  \_\ \  \\\  \ \  \\\__\ \  \   
- \ \  \/  / / \ \   __  \ \  \\ \  \   \ \  \ \ \  \\\  \ \  \\|__| \  \  
-  \ \    / /   \ \  \ \  \ \  \\ \  \   \ \  \ \ \  \\\  \ \  \    \ \  \ 
-   \ \__/ /     \ \__\ \__\ \__\\ \__\   \ \__\ \ \_______\ \__\    \ \__\
-    \|__|/       \|__|\|__|\|__| \|__|    \|__|  \|_______|\|__|     \|__|
+                                                                   tttt                                                    
+                                                                ttt:::t                                                    
+                                                                t:::::t                                                    
+                                                                t:::::t                                                    
+vvvvvvv           vvvvvvvaaaaaaaaaaaaa  nnnn  nnnnnnnn    ttttttt:::::ttttttt    uuuuuu    uuuuuu     mmmmmmm    mmmmmmm   
+ v:::::v         v:::::v a::::::::::::a n:::nn::::::::nn  t:::::::::::::::::t    u::::u    u::::u   mm:::::::m  m:::::::mm 
+  v:::::v       v:::::v  aaaaaaaaa:::::an::::::::::::::nn t:::::::::::::::::t    u::::u    u::::u  m::::::::::mm::::::::::m
+   v:::::v     v:::::v            a::::ann:::::::::::::::ntttttt:::::::tttttt    u::::u    u::::u  m::::::::::::::::::::::m
+    v:::::v   v:::::v      aaaaaaa:::::a  n:::::nnnn:::::n      t:::::t          u::::u    u::::u  m:::::mmm::::::mmm:::::m
+     v:::::v v:::::v     aa::::::::::::a  n::::n    n::::n      t:::::t          u::::u    u::::u  m::::m   m::::m   m::::m
+      v:::::v:::::v     a::::aaaa::::::a  n::::n    n::::n      t:::::t          u::::u    u::::u  m::::m   m::::m   m::::m
+       v:::::::::v     a::::a    a:::::a  n::::n    n::::n      t:::::t    ttttttu:::::uuuu:::::u  m::::m   m::::m   m::::m
+        v:::::::v      a::::a    a:::::a  n::::n    n::::n      t::::::tttt:::::tu:::::::::::::::uum::::m   m::::m   m::::m
+         v:::::v       a:::::aaaa::::::a  n::::n    n::::n      tt::::::::::::::t u:::::::::::::::um::::m   m::::m   m::::m
+          v:::v         a::::::::::aa:::a n::::n    n::::n        tt:::::::::::tt  uu::::::::uu:::um::::m   m::::m   m::::m
+           vvv           aaaaaaaaaa  aaaa nnnnnn    nnnnnn          ttttttttttt      uuuuuuuu  uuuummmmmm   mmmmmm   mmmmmm
+                                                                                                                                                                                                                              
 EOF
 echo "Beginning boot...";                                               
 
