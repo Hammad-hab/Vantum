@@ -147,7 +147,7 @@ case $desktop in
  rox)
 	if [ -f /root/.config/wallpaper/bg_img ]; then
 		BG=$(cat /root/.config/wallpaper/bg_img)
-		hsetroot -cover "$BG" &
+		feh --bg-fill "$BG" &
 	fi
 	;;
 esac
