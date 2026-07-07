@@ -62,7 +62,7 @@ no|bcrypt|bcrypt|exe,dev,doc,nls
 no|bin86|bin86|exe>dev,dev,doc,nls
 yes|binutils|binutils|exe>dev,dev,doc,nls||deps:yes
 yes|bison|bison|exe>dev,dev,doc,nls||deps:yes
-yes|blueman|blueman|exe,dev,doc,nls||deps:yes
+no|blueman|blueman|exe,dev,doc,nls||deps:yes
 yes|bluez|bluez,bluez-obexd|exe,dev,doc,nls||deps:yes
 no|boehm-gc|libgc1,libgc-dev|exe,dev,doc,nls||deps:yes
 no|busybox||exe
@@ -75,7 +75,7 @@ yes|ccache|ccache|exe>dev,dev,doc,nls||deps:yes
 no|cdparanoia|cdparanoia,libcdparanoia0,libcdparanoia-dev|exe,dev,doc,nls
 no|cgpt|cgpt|exe>dev,dev,doc,nls||deps:yes
 no|cifs-utils|cifs-utils|exe,dev,doc,nls
-yes|claws-mail-deps|libetpan-dev|exe,dev,doc,nls||deps:yes
+no|claws-mail-deps|libetpan-dev|exe,dev,doc,nls||deps:yes
 yes|conky-std|conky-std|exe,dev,doc,nls||deps:yes
 yes|Conky_GTK_2024||exe
 yes|connman|connman|exe,dev,doc,nls||deps:yes
@@ -161,7 +161,7 @@ yes|fribidi|libfribidi0,libfribidi-dev|exe,dev,doc,nls||deps:yes
 no|fuse|fuse,libfuse2,libfuse-dev|exe,dev,doc,nls||deps:yes
 no|gadmin-rsync|gadmin-rsync|exe,dev>null,doc,nls
 no|gail|libgail18,libgail-common,libgail-dev|exe,dev,doc,nls
-yes|galculator|galculator|exe,dev>null,doc,nls||deps:yes
+no|galculator|galculator|exe,dev>null,doc,nls||deps:yes
 no|gamin|gamin,libgamin0,libgamin-dev|exe,dev,doc,nls
 yes|gawk|gawk|exe,dev>null,doc,nls||deps:yes
 yes|gcc_dev|gcc,g++|exe>dev,dev,doc,nls||deps:yes #cloog-isl removed
