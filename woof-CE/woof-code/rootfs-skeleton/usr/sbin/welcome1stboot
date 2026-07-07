@@ -1,33 +1,32 @@
 #!/bin/ash
-#welcome
+# Vantum first-boot welcome
 
 export TEXTDOMAIN=welcome1stboot
 export OUTPUT_CHARSET=UTF-8
 
 . /etc/DISTRO_SPECS
-W_MSG="$(gettext "Welcome,
-This is the first time you are running ${DISTRO_NAME}!...")"
+W_MSG="$(gettext "Welcome to ${DISTRO_NAME}.
+Your system is ready to go — here's a quick look at what's available.")"
 
 if check_internet ; then
-	LABEL_INTERNET="$(gettext "Congratulations, you seem to be connected to the Internet. Experiment with mouse-over, left-click and right-click on the 'network' icon in the tray. Click on the icon on the right (or on the desktop) if you need to reconfigure the Internet connection")"
+	LABEL_INTERNET="$(gettext "You're connected. Manage your network anytime from the tray icon — left-click for status, right-click for options.")"
 elif check_internet working_network ; then
-	LABEL_INTERNET="$(gettext "There is a working network interface, but you are not connected to the Internet. Click on the 'connect' icon on the right, or on left-side of the desktop (do NOT double-click), to setup the Internet connection. Note the network status icon in the tray.")"
+	LABEL_INTERNET="$(gettext "A network interface is active, but you're not online yet. Use the button on the right to set up your connection.")"
 else
-	LABEL_INTERNET="$(gettext "Click on the button on the right, or icon at left of the screen (one click only!). You will then see some buttons for choosing how you wish to connect to the Internet. It is easy...")"
+	LABEL_INTERNET="$(gettext "Not connected yet. Click the button on the right to choose how you'd like to connect — it only takes a moment.")"
 fi
 
-LABEL_INTERNET="$(gettext "<b>Internet connection</b>
+LABEL_INTERNET="$(gettext "<b>Network</b>
 ${LABEL_INTERNET}")"
-LABEL_NEEDHELP="$(gettext "<b>I need help!</b>
-Explore the Menu -- see bottom-left of screen. Lots of local help is available -- select Help in the menu. The local Help page also has the Release Notes for this version of ${DISTRO_NAME}-- well worth checking out! When you get online, the web browser home page has many more links.")"
-LABEL_SETUP="$(gettext '<b>Setup</b>
-Want to install an upgraded video driver? Country localization? Printing? Sound? Mouse? Keyboard? Click here (or 'setup' icon at top of screen).')"
+LABEL_NEEDHELP="$(gettext "<b>Need a hand?</b>
+Open the Menu in the bottom-left corner for documentation and release notes. Once you're online, the browser home page has more resources.")"
+LABEL_SETUP="$(gettext '<b>System Setup</b>
+Configure your display driver, region, printer, sound, or input devices from the Setup panel, accessible from the top of the screen at any time.')"
 
 export WELCOME_DIALOG='
-<window title="'$(gettext 'Welcome')'" icon-name="gtk-info" resizable="false">
+<window title="'$(gettext 'Welcome to Vantum')'" icon-name="gtk-info" resizable="false">
 <vbox>
 	<hbox border-width="7" space-expand="true" space-fill="true">
-      <pixmap icon_size="4"><input file>/usr/share/doc/puppylogo96.png</input></pixmap>
       <text use-markup="true"><label>"<big>'"${W_MSG}"'</big>"</label></text>
     </hbox>
     <hbox border-width="7" space-expand="true" space-fill="true">
@@ -66,7 +65,7 @@ export WELCOME_DIALOG='
     </hbox>
     <hbox border-width="7" space-expand="true" space-fill="true">
       <pixmap><input file>/usr/share/doc/tray.png</input></pixmap>
-      <text xalign="0" use-markup="true" space-expand="true" space-fill="true"><label>"'$(gettext "...mouse-over and click the tray applets!")'"</label></text>
+      <text xalign="0" use-markup="true" space-expand="true" space-fill="true"><label>"'$(gettext "Tip: hover and click the tray applets to explore system tools.")'"</label></text>
     </hbox>
   </vbox>
 </window>'
