@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<menu>
+    <item name="Firefox" icon="firefox" exec="firefox"/>
+    <item name="Terminal" icon="utilities-terminal" exec="xterm"/>
+    <item name="Files" icon="system-file-manager" exec="pcmanfm"/>
+    <item name="Text Editor" icon="accessories-text-editor" exec="geany"/>
+</menu>

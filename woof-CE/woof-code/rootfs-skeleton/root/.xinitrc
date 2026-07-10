@@ -145,13 +145,30 @@ sleep 1 # let the dust settle
 case $desktop in
  pcmanfm) pcmanfm --desktop & ;;
  rox)
-	if [ -f /root/.config/wallpaper/bg_img ]; then
-		BG=$(cat /root/.config/wallpaper/bg_img)
-        hsetroot -cover "$BG" || xsetroot -solid "#2a1a4a"
+    if [ -f /root/.config/wallpaper/bg_img ]; then
+        BG=$(cat /root/.config/wallpaper/bg_img)
+        
+        # Use the saved wallpaper if the file actually exists
+        if [ -n "$BG" ] && [ -f "$BG" ]; then
+            hsetroot -cover "$BG" && echo "Wallpaper set: $BG"
+        else
+            # Fallback to default Vantum image
+            if [ -f /usr/share/backgrounds/VantumDefaut.png ]; then
+                hsetroot -cover "/usr/share/backgrounds/VantumDefaut.png" && echo "Using default Vantum wallpaper"
+            else
+                xsetroot -solid "#2a1a4a" && echo "Using solid color fallback"
+            fi
+        fi
+        
     else
-        xsetroot -solid "#2a1a4a"
-	fi
-	;;
+        # No bg_img file exists at all → use default Vantum wallpaper
+        if [ -f /usr/share/backgrounds/VantumDefaut.png ]; then
+            hsetroot -cover "/usr/share/backgrounds/VantumDefaut.png" && echo "Using default Vantum wallpaper"
+        else
+            xsetroot -solid "#2a1a4a" && echo "Using solid color fallback"
+        fi
+    fi
+    ;;
 esac
 
 /sbin/pup_event_frontend_d & #130525 moved down.

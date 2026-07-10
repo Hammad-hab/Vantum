@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<menu>
+
+    <item name="Firefox" icon="assets/icons/firefox.svg" exec="firefox"/>
+    <item name="Terminal" icon="assets/icons/utilities-terminal.svg" exec="xterm"/>
+    <item name="Files" icon="assets/icons/file-manager.svg" exec="nautilus"/>
+    <item name="Settings" icon="assets/icons/preferences-system.svg" exec="vantum-settings"/>
+
+    <folder name="Internet" icon="assets/icons/folder.svg">
+        <item name="Firefox" icon="assets/icons/firefox.svg" exec="firefox"/>
+        <item name="Chrome" icon="assets/icons/google-chrome.svg" exec="google-chrome"/>
+        <item name="Chromium" icon="assets/icons/chromium.svg" exec="chromium"/>
+        <item name="Thunderbird" icon="assets/icons/thunderbird.svg" exec="thunderbird"/>
+    </folder>
+
+    <folder name="Development" icon="assets/icons/folder.svg">
+        <item name="Visual Studio Code" icon="assets/icons/code.svg" exec="code"/>
+        <item name="Gitg" icon="assets/icons/gitg.svg" exec="gitg"/>
+
+        <folder name="Utilities" icon="assets/icons/folder.svg">
+            <item name="Terminal" icon="assets/icons/utilities-terminal.svg" exec="xterm"/>
+            <item name="System Monitor" icon="assets/icons/system-monitor.svg" exec="gnome-system-monitor"/>
+        </folder>
+    </folder>
+
+    <folder name="Office" icon="assets/icons/folder.svg">
+        <item name="Writer" icon="assets/icons/writer.svg" exec="libreoffice --writer"/>
+        <item name="Calc" icon="assets/icons/calc.svg" exec="libreoffice --calc"/>
+        <item name="Impress" icon="assets/icons/impress.svg" exec="libreoffice --impress"/>
+    </folder>
+
+    <folder name="Media" icon="assets/icons/folder.svg">
+        <item name="VLC" icon="assets/icons/vlc.svg" exec="vlc"/>
+        <item name="Music" icon="assets/icons/music.svg" exec="audacious"/>
+        <item name="Image Viewer" icon="assets/icons/image-viewer.svg" exec="loupe"/>
+    </folder>
+
+    <folder name="Accessories" icon="assets/icons/folder.svg">
+        <item name="Calculator" icon="assets/icons/calculator.svg" exec="gnome-calculator"/>
+        <item name="Text Editor" icon="assets/icons/text-editor.svg" exec="gedit"/>
+
+        <folder name="Documents" icon="assets/icons/folder.svg">
+            <item name="Notes" icon="assets/icons/text-editor.svg" exec="gedit ~/notes.txt"/>
+            <item name="Downloads" icon="assets/icons/folder.svg" exec="xdg-open ~/Downloads"/>
+            <item name="Pictures" icon="assets/icons/folder.svg" exec="xdg-open ~/Pictures"/>
+            <item name="Music" icon="assets/icons/folder.svg" exec="xdg-open ~/Music"/>
+            <item name="Videos" icon="assets/icons/folder.svg" exec="xdg-open ~/Videos"/>
+        </folder>
+    </folder>
+
+    <folder name="System" icon="assets/icons/folder.svg">
+        <item name="Settings" icon="assets/icons/preferences-system.svg" exec="vantum-settings"/>
+        <item name="Disks" icon="assets/icons/disk-utility.svg" exec="gnome-disks"/>
+        <item name="Files" icon="assets/icons/file-manager.svg" exec="nautilus"/>
+        <item name="System Monitor" icon="assets/icons/system-monitor.svg" exec="gnome-system-monitor"/>
+
+        <folder name="Advanced" icon="assets/icons/folder.svg">
+            <item name="Terminal" icon="assets/icons/utilities-terminal.svg" exec="xterm"/>
+            <item name="Root Shell" icon="assets/icons/utilities-terminal.svg" exec="pkexec xterm"/>
+            <item name="Disk Utility" icon="assets/icons/disk-utility.svg" exec="gnome-disks"/>
+
+            <folder name="Diagnostics" icon="assets/icons/folder.svg">
+                <item name="System Monitor" icon="assets/icons/system-monitor.svg" exec="gnome-system-monitor"/>
+                <item name="Terminal" icon="assets/icons/utilities-terminal.svg" exec="xterm"/>
+            </folder>
+        </folder>
+    </folder>
+
+</menu>
