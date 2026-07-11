@@ -1131,6 +1131,11 @@ Output files:
 ------------------"
 fi
 
+if [ "$USR_SYMLINKS" = "yes" -a "$kit_kernel" != "yes" ] ; then
+	log_msg "Running usrmerge (USR_SYMLINKS enabled)"
+	./usrmerge.sh
+fi
+
 echo "Done!"
 [ -n "$GITHUB_ACTIONS" -o ! -f /usr/share/sounds/2barks.au ] || aplay /usr/share/sounds/2barks.au
 
