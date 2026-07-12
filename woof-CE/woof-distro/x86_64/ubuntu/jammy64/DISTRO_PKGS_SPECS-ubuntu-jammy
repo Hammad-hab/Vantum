@@ -456,7 +456,6 @@ no|lxrandr||exe,dev,doc,nls
 no|lxtask||exe,dev,doc,nls
 no|lxterminal||exe,dev,doc,nls
 yes|thunar|thunar,thunar-data,thunar-archive-plugin,tumbler|exe,dev,doc,nls
-yes|rxvt-unicode|rxvt-unicode|exe,dev,doc,nls
 no|lxde_apps|gpicview,lxinput|exe,dev,doc,nls
 no|gmrun||exe
 no|pcmanfm|pcmanfm,libfm4,libfm-data,libfm-extra4,libfm-gtk4,libfm-gtk-data,libmenu-cache3,libmenu-cache-bin,lxmenu-data
@@ -594,7 +593,7 @@ yes|rman|rman|exe>dev,dev,doc,nls||deps:yes
 no|rox-filer||exe
 yes|rsync|rsync|exe,dev||deps:yes
 no|rtmpdump|rtmpdump,librtmp1,librtmp-dev,flvstreamer|exe,dev,doc,nls
-no|rxvt-unicode||exe,dev>null,doc,nls
+yes|rxvt-unicode||exe,dev>null,doc,nls
 no|sane-backends||exe,dev,doc,nls
 no|scale2x||exe
 no|sdl|libsdl1.2debian,libsdl-image1.2,libwebp6|exe,dev,doc,nls
