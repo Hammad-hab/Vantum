@@ -1,11 +1,12 @@
 [Desktop Entry]
-Encoding=UTF-8
-Name=Startup apps manager
-Icon=/usr/share/pixmaps/puppy/startup_app.svg
-Comment=Configure what applications to run when Puppy boots
-Exec=wmstartups
-Terminal=false
+Version=1.0
 Type=Application
-Categories=X-Setup-wizard
-GenericName=Startup apps manager
-NoDisplay=true
+Name=Files
+GenericName=File Manager
+Comment=Browse files and folders
+Exec=thunar
+Icon=folder
+Terminal=false
+Categories=System;FileManager;
+StartupNotify=true
+MimeType=inode/directory;
