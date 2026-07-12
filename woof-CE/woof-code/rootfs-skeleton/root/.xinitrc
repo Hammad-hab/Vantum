@@ -153,18 +153,17 @@ case $desktop in
             hsetroot -cover "$BG" && echo "Wallpaper set: $BG"
         else
             # Fallback to default Vantum image
-            if [ -f /usr/share/backgrounds/VantumDefaut.png ]; then
-                hsetroot -cover "/usr/share/backgrounds/VantumDefaut.png" && echo "Using default Vantum wallpaper"
+            if [ -f /usr/share/backgrounds/VantumDefault.png ]; then
+                hsetroot -cover "/usr/share/backgrounds/VantumDefault.png" && echo "Using default Vantum wallpaper"
             else
                 xsetroot -solid "#2a1a4a" && echo "Using solid color fallback"
             fi
         fi
-        hsetroot -cover "/usr/share/backgrounds/VantumDefaut.png"
         
     else
         # No bg_img file exists at all → use default Vantum wallpaper
-        if [ -f /usr/share/backgrounds/VantumDefaut.png ]; then
-            hsetroot -cover "/usr/share/backgrounds/VantumDefaut.png" && echo "Using default Vantum wallpaper"
+        if [ -f /usr/share/backgrounds/VantumDefault.png ]; then
+            hsetroot -cover "/usr/share/backgrounds/VantumDefault.png" && echo "Using default Vantum wallpaper"
         else
             xsetroot -solid "#2a1a4a" && echo "Using solid color fallback"
         fi

@@ -455,6 +455,8 @@ yes|lsb-base|lsb-base|exe,dev,doc,nls||deps:yes
 no|lxrandr||exe,dev,doc,nls
 no|lxtask||exe,dev,doc,nls
 no|lxterminal||exe,dev,doc,nls
+yes|thunar|thunar,thunar-data,thunar-archive-plugin,tumbler|exe,dev,doc,nls
+yes|rxvt-unicode|rxvt-unicode|exe,dev,doc,nls
 no|lxde_apps|gpicview,lxinput|exe,dev,doc,nls
 no|gmrun||exe
 no|pcmanfm|pcmanfm,libfm4,libfm-data,libfm-extra4,libfm-gtk4,libfm-gtk-data,libmenu-cache3,libmenu-cache-bin,lxmenu-data

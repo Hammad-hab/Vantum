@@ -28,6 +28,7 @@ which prun >/dev/null 2>&1 && exec prun # this app is heavy
 
 # etc
 which lxterminal >/dev/null 2>&1 && exec lxterminal
+which urxvt >/dev/null 2>&1 && exec urxvt
 exec xterm 
 
 ### END ###
