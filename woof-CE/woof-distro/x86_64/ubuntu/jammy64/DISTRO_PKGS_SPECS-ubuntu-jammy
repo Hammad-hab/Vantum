@@ -456,6 +456,12 @@ no|lxrandr||exe,dev,doc,nls
 no|lxtask||exe,dev,doc,nls
 no|lxterminal||exe,dev,doc,nls
 yes|thunar|thunar,thunar-data,thunar-archive-plugin,tumbler|exe,dev,doc,nls
+yes|exo-utils|exo-utils|exe,dev,doc,nls
+yes|libexo-2-0|libexo-2-0|exe,dev,doc,nls
+yes|libthunarx-3-0|libthunarx-3-0|exe,dev,doc,nls
+yes|libxfce4ui-2-0|libxfce4ui-2-0|exe,dev,doc,nls
+yes|libxfce4util7|libxfce4util7|exe,dev,doc,nls
+yes|libxfconf-0-3|libxfconf-0-3|exe,dev,doc,nls
 no|lxde_apps|gpicview,lxinput|exe,dev,doc,nls
 no|gmrun||exe
 no|pcmanfm|pcmanfm,libfm4,libfm-data,libfm-extra4,libfm-gtk4,libfm-gtk-data,libmenu-cache3,libmenu-cache-bin,lxmenu-data
