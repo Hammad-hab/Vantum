@@ -219,7 +219,7 @@ mv -f fdrv* $FDRVSFS
 # merge lib/modules -> usr/lib/modules to match USR_SYMLINKS scheme
 if [ "$USR_SYMLINKS" = "yes" ] ; then
     echo "Running usrmerge on zdrv"
-    . ../../woof-code/_00func
+    . ../../_00func
     mkdir -p zdrv_merge_tmp
     unsquashfs -d zdrv_merge_tmp/extracted $ZDRVSFS
     rm -f $ZDRVSFS
