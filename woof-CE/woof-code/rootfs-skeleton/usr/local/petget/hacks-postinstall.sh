@@ -138,5 +138,15 @@ Categories=WebBrowser;' > /usr/share/applications/google-chrome.desktop
  kompozer*) #130507
   [ -f /usr/bin/kompozer ] && [ -d /usr/lib/kompozer ] && sed -i -e 's%^moz_libdir=%export MOZILLA_FIVE_HOME="/usr/lib/kompozer" #BK\nmoz_libdir=%' /usr/bin/kompozer
  ;;
+ Conky_GTK_2024*) #fix broken transparency defaults in shipped conkyrc
+  CONKYRC="/root/.config/conky-gtk/conkyrc"
+  if [ -f "$CONKYRC" ];then
+   sed -i \
+     -e "s/own_window_transparent = true,/own_window_transparent = false,/" \
+     -e "s/own_window_argb_visual = false,/own_window_argb_visual = true,/" \
+     -e "s/own_window_argb_value = 255,/own_window_argb_value = 0,/" \
+     "$CONKYRC"
+   cp -f "$CONKYRC" "${CONKYRC}.bak" 2>/dev/null
+  fi
+ ;;
 esac
-

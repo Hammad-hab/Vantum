@@ -601,8 +601,11 @@ no|rox-filer||exe
 yes|rsync|rsync|exe,dev||deps:yes
 no|rtmpdump|rtmpdump,librtmp1,librtmp-dev,flvstreamer|exe,dev,doc,nls
 yes|rxvt-unicode||exe,dev>null,doc,nls
+yes|libperl5.40|libperl5.40|exe,dev,doc,nls
+yes|libptytty0|libptytty0|exe,dev,doc,nls
 no|sane-backends||exe,dev,doc,nls
 no|scale2x||exe
+yes|libwnck3|libwnck-3-0,libwnck-common,gir1.2-wnck-3.0,libxres1|exe,dev,doc,nls
 no|sdl|libsdl1.2debian,libsdl-image1.2,libwebp6|exe,dev,doc,nls
 yes|sed|sed|exe,dev>null,doc,nls||deps:yes
 yes|sensible-utils|sensible-utils|exe,dev,doc,nls||deps:yes

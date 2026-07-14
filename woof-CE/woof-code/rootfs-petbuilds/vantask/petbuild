@@ -1,0 +1,26 @@
+download() {
+    [ -e Vantask.tar.gz ] || curl -L https://github.com/Hammad-hab/Vantask/archive/refs/heads/main.tar.gz -o Vantask.tar.gz
+}
+
+
+build() {
+    [ -d Vantask-main ] || tar -xzf Vantask.tar.gz
+    cd Vantask-main
+    rm -rf examples
+    install -D -m 644 assets/launcher-icon.png /root/.config/launcher-icon.png
+    rm -rf assets
+    rm -f README.md
+    rm -f .gitattributes
+    rm -f .gitignore
+    rm -f mockWnck.py
+
+    sed -i 's|load_icon_image("assets/launcher-icon.png", ICON_SIZE)|load_icon_image("/root/.config/launcher-icon.png", ICON_SIZE)|' vantask.py
+
+    {
+        echo "#!/usr/bin/env python3"
+        cat vantask.py
+    } > vantask.py.new && mv vantask.py.new vantask
+    install -D -m 755 vantask /usr/sbin/vantask
+
+}
+
