@@ -8,6 +8,7 @@ build() {
     cd Vantask-main
     rm -rf examples
     install -D -m 644 assets/launcher-icon.png /root/.config/launcher-icon.png
+    
     rm -rf assets
     rm -f README.md
     rm -f .gitattributes
@@ -22,5 +23,12 @@ build() {
     } > vantask.py.new && mv vantask.py.new vantask
     install -D -m 755 vantask /usr/sbin/vantask
 
-}
+    mkdir -p /root/.config
+    cat > /root/.config/task.xml <<'EOF'
+<?xml version="1.0"?>
+<task>
+    <launcher_cmd exec="vantyl /root/.config/menu.xml"/>
+</task>
+EOF
 
+}

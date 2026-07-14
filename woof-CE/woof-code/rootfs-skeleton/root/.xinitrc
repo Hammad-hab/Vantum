@@ -209,6 +209,8 @@ if [ "$CURRENTWM" != "jwm" -a "$CURRENTWM" != "icewm" ];then
  [ "$desktop" = "rox" ] && [ -f /usr/bin/lxpanel ] && lxpanel &
 fi
 
+[ -f /usr/sbin/vantask ] && /usr/sbin/vantask /root/.config/task.xml &
+
 which $CURRENTWM && exec $CURRENTWM
 [ -x $CURRENTWM ] && exec $CURRENTWM
 [ "$desktop" = "rox" ] && exec jwm
