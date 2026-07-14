@@ -1,2 +1,0 @@
-${alignc}${color2}${texecpi 300 until [ -n "$(ip -o link show up | grep -v lo | awk '{print $2}' | cut -d':' -f1)" ]; do sleep 1; done; curl wttr.in/@conky-gtk-location@?T0 --silent}
-${color1}${voffset 2}${hr 2}
