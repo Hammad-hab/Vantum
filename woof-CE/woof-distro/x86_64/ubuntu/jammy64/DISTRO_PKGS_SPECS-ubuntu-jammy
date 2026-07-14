@@ -601,7 +601,7 @@ no|rox-filer||exe
 yes|rsync|rsync|exe,dev||deps:yes
 no|rtmpdump|rtmpdump,librtmp1,librtmp-dev,flvstreamer|exe,dev,doc,nls
 yes|rxvt-unicode||exe,dev>null,doc,nls
-yes|libperl5.40|libperl5.40|exe,dev,doc,nls
+yes|libperl5.34|libperl5.34|exe,dev,doc,nls
 yes|libptytty0|libptytty0|exe,dev,doc,nls
 no|sane-backends||exe,dev,doc,nls
 no|scale2x||exe
