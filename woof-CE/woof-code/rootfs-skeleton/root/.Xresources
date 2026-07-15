@@ -4,3 +4,83 @@
 !*font: -misc-fixed-medium-r-normal--15-140-75-75-c-90-*-*
 
 Xft.dpi: 96
+
+
+!=========================================================
+! Vantum Terminal (URxvt)
+!=========================================================
+
+!-------------------------
+! General
+!-------------------------
+URxvt.termName: rxvt-unicode-256color
+URxvt.scrollBar: false
+URxvt.saveLines: 10000
+
+!-------------------------
+! Appearance
+!-------------------------
+URxvt.font: xft:DejaVu Sans Mono:pixelsize=15
+URxvt.boldFont: xft:DejaVu Sans Mono:style=Bold:pixelsize=15
+
+URxvt.internalBorder: 16
+URxvt.lineSpace: 2
+URxvt.letterSpace: 0
+
+!-------------------------
+! Cursor
+!-------------------------
+URxvt.cursorBlink: false
+URxvt.cursorColor: #8ab4f8
+
+! Thin cursor (requires the 'cursor' Perl extension)
+! Uncomment these if your build includes it.
+!
+! URxvt.perl-ext-common: default,cursor,matcher
+! URxvt.cursor-thickness: 2
+
+! Otherwise, keep the standard extensions:
+URxvt.perl-ext-common: default,matcher
+
+!-------------------------
+! URLs
+!-------------------------
+URxvt.url-launcher: xdg-open
+URxvt.matcher.button: 1
+
+!-------------------------
+! Keyboard
+!-------------------------
+URxvt.keysym.Shift-Control-C: eval:selection_to_clipboard
+URxvt.keysym.Shift-Control-V: eval:paste_clipboard
+
+!-------------------------
+! Bell
+!-------------------------
+URxvt.visualBell: false
+URxvt.urgentOnBell: false
+
+!-------------------------
+! Colors
+!-------------------------
+URxvt.background: #111317
+URxvt.foreground: #d8dee9
+URxvt.cursorColor: #8ab4f8
+
+URxvt.color0:  #1d2027
+URxvt.color1:  #f7768e
+URxvt.color2:  #9ece6a
+URxvt.color3:  #e0af68
+URxvt.color4:  #7aa2f7
+URxvt.color5:  #bb9af7
+URxvt.color6:  #7dcfff
+URxvt.color7:  #c0caf5
+
+URxvt.color8:  #414868
+URxvt.color9:  #ff899d
+URxvt.color10: #b9f27c
+URxvt.color11: #f7c97f
+URxvt.color12: #8db4ff
+URxvt.color13: #d1b3ff
+URxvt.color14: #8fe8ff
+URxvt.color15: #ffffff
