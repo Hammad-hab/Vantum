@@ -792,10 +792,6 @@ if [ ! "$ISOFLAG" ]; then
 	fi
 fi
 
-# puppyPDF needs Abiword
-if [ ! -e rootfs-complete/usr/bin/abiword ]; then
-	rm -f rootfs-complete/usr/share/applications/puppyPDF-convert-file-to-PDF.desktop rootfs-complete/usr/sbin/puppypdf
-fi
 
 # pdict needs dict
 if [ ! -e rootfs-complete/usr/bin/dict ]; then

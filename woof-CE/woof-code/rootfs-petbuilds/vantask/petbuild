@@ -28,6 +28,9 @@ build() {
 <?xml version="1.0"?>
 <task>
     <launcher_cmd exec="vantyl /root/.config/menu.xml"/>
+    <pinned name="URXVT" icon="/usr/share/pixmaps/puppy/terminal.svg" exec="urxvt"/>
+    <pinned name="Palemoon" icon="/usr/share/icons/palemoon32.png" exec="palemoon"/>
+    <pinned name="Palemoon" icon="/usr/share/icons/hicolor/scalable/apps/org.xfce.thunar.svg" exec="thunar"/>
 </task>
 EOF
 
