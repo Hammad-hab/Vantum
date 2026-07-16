@@ -602,7 +602,7 @@ yes|rman|rman|exe>dev,dev,doc,nls||deps:yes
 no|rox-filer||exe
 yes|rsync|rsync|exe,dev||deps:yes
 no|rtmpdump|rtmpdump,librtmp1,librtmp-dev,flvstreamer|exe,dev,doc,nls
-yes|rxvt-unicode|rxvt-unicode-lite|exe,dev>null,doc,nls
+yes|rxvt-unicode|rxvt-unicode|exe,dev>null,doc,nls
 yes|libperl5.34|libperl5.34|exe,dev,doc,nls
 yes|libptytty0|libptytty0|exe,dev,doc,nls
 no|sane-backends||exe,dev,doc,nls
