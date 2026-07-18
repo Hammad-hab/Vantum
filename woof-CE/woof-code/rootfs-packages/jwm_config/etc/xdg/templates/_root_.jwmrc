@@ -24,26 +24,6 @@
 <RootMenu label="8" labeled="false" height="MENHEIGHT" onroot="8"><Include>exec:/usr/local/jwm_config/menu_build_places</Include></RootMenu>
 
 <!-- jwm menus for puppy Linux -->
-<RootMenu label="Menu" labeled="false" height="MENHEIGHT" onroot="9">
-	PUPPYMENU jwm-xdgmenu /etc/xdg/menus/puppy-desktop.menu
-	PUPPYMENU jwm-xdgmenu /etc/xdg/menus/puppy-system.menu
-	PUPPYMENU jwm-xdgmenu /etc/xdg/menus/puppy-setup.menu
-	<Separator/>
-	PUPPYMENU jwm-xdgmenu /etc/xdg/menus/puppy-utility.menu
-	PUPPYMENU jwm-xdgmenu /etc/xdg/menus/puppy-filesystem.menu
-	PUPPYMENU jwm-xdgmenu /etc/xdg/menus/puppy-graphic.menu
-	PUPPYMENU jwm-xdgmenu /etc/xdg/menus/puppy-document.menu
-	PUPPYMENU jwm-xdgmenu /etc/xdg/menus/puppy-calculate.menu
-	PUPPYMENU jwm-xdgmenu /etc/xdg/menus/puppy-personal.menu
-	PUPPYMENU jwm-xdgmenu /etc/xdg/menus/puppy-network.menu
-	PUPPYMENU jwm-xdgmenu /etc/xdg/menus/puppy-internet.menu
-	PUPPYMENU jwm-xdgmenu /etc/xdg/menus/puppy-multimedia.menu
-	PUPPYMENU jwm-xdgmenu /etc/xdg/menus/puppy-fun.menu
-	<Separator/>
-	<Program label="Help" icon="help48.png">/usr/sbin/puppyhelp</Program>
-	<Program label="Leave" icon="shutdown48.png">/usr/sbin/logout_gui</Program>
-</RootMenu>
-
 
 <!-- General classes -->
 <Group>

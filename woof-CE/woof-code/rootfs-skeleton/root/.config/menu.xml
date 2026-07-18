@@ -4,7 +4,9 @@
     <!-- Root Applications -->
 
     <item name="Files" exec="thunar" icon="/usr/share/icons/hicolor/scalable/apps/org.xfce.thunar.svg"/>
-    <item name="Terminal" exec="urxvt" icon="/usr/share/pixmaps/Utility-shell.svg"/>
+    <item name="Terminal" exec="urxvt +sb" icon="/usr/share/pixmaps/Utility-shell.svg"/>
+    <item name="Firefox" exec="firefox" icon="/usr/share/icons/Puppy Standard/scalable/apps/firefox.svg"/>
+    <item name="xpdf" exec="xpdf" icon="/usr/share/icons/hicolor/scalable/apps/xpdf.svg"/>
 
     <folder name="Utilities">
         <item name="Htop" exec="htop" icon="/usr/share/pixmaps/htop.png"/>
@@ -13,7 +15,6 @@
         <item name="Xdelta" exec="xdelta_gui" icon="/usr/share/pixmaps/puppy/file_compare.svg"/>
         <item name="Gcolor2" exec="gcolor2" icon="/usr/share/pixmaps/puppy/select-color.svg"/>
         <item name="Font Viewer" exec="gfontsel" icon="/usr/share/pixmaps/puppy/font.svg"/>
-        <item name="xpdf" exec="xpdf" icon="/usr/share/icons/hicolor/scalable/apps/xpdf.svg"/>
         <item name="PupCamera" exec="pupcamera" icon="/usr/share/pixmaps/puppy/photocamera.svg"/>
     </folder>
 
