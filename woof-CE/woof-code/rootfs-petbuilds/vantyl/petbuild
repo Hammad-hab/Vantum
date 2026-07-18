@@ -21,8 +21,6 @@ build() {
         echo "#!/usr/bin/env python3"
         cat _vantumMenuInit.py
     } > _vantumMenuInit.new && mv _vantumMenuInit.new vantyl-gen-menu
-    python3 _vantumMenuInit.py /usr/share/applications
-    install -D -m 644 menu.xml /root/.config/menu.xml
     install -D -m 755 vantyl-gen-menu /usr/local/bin/vantyl-gen-menu
 }
 

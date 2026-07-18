@@ -89,7 +89,7 @@ yes|crda|wireless-regdb|exe,dev,doc,nls||deps:yes
 yes|cryptsetup|cryptsetup-bin|exe,dev,doc,nls||deps:yes
 no|ctorrent|ctorrent|exe,dev>null,doc,nls
 no|cryptsetup||exe # must use wce static binary
-yes|cups|cups,cups-bsd,printer-driver-cups-pdf,foomatic-db-compressed-ppds,libcups2-dev|exe,dev,doc,nls||deps:yes
+no|cups|cups,cups-bsd,printer-driver-cups-pdf,foomatic-db-compressed-ppds,libcups2-dev|exe,dev,doc,nls||deps:yes
 yes|curl|curl,libcurl4,libcurl4-gnutls-dev|exe,dev,doc,nls||deps:yes
 no|cvs|cvs|exe>dev,dev,doc,nls
 yes|cyrus-sasl2|libsasl2-2|exe,dev,doc,nls||deps:yes
@@ -273,7 +273,7 @@ yes|jq|jq,libjq1|exe,dev,doc,nls||deps:yes
 no|JWMDesk||exe,dev,doc,nls
 yes|keyutils|libkeyutils1|exe,dev>null,doc,nls||deps:yes
 yes|kmod|kmod,libkmod2,libkmod-dev|exe,dev,doc,nls||deps:yes #er, no, looks like compiled without gzip support --but i think only need that in initrd, where already have old modprobe.
-yes|krb5|libkrb5-3,libkrb5support0,libk5crypto3,libgssapi-krb5-2|exe,dev,doc,nls||deps:yes
+no|krb5|libkrb5-3,libkrb5support0,libk5crypto3,libgssapi-krb5-2|exe,dev,doc,nls||deps:yes
 no|lame|lame,libmp3lame0,libmp3lame-dev|exe,dev,doc,nls
 no|lcms|liblcms2-2,liblcms2-dev,liblcms2-utils|exe,dev,doc,nls
 no|lcms2|liblcms2-2,liblcms2-dev,liblcms2-utils|exe,dev,doc,nls
@@ -478,6 +478,7 @@ yes|make|make|exe>dev,dev,doc,nls||deps:yes
 yes|man|man-db|exe,dev,doc,nls||deps:yes
 yes|mesa|libgbm1,libgbm-dev,libegl1,libegl-mesa0,libwayland-egl1,libegl1-mesa-dev,libgles1,libgles2,libgles-dev,libglvnd0,libglvnd-dev,libegl-dev,libglx0,libglx-dev,libglx-mesa0,libopengl-dev,libegl-amber0,libgl1-amber-dri,libglx-amber0|exe,dev,doc,nls||deps:yes #have most in xorg_base. these extra needed by gstreamer. GSTREAMER1.0
 yes|meson|meson|exe>dev,dev,doc,nls||deps:yes
+yes|libxm4|libxm4|exe
 no|mhash|libmhash2,libmhash-dev|exe,dev,doc,nls
 no|mhwaveedit|mhwaveedit|exe,dev>null,doc,nls
 no|mirdir||exe
@@ -517,7 +518,7 @@ yes|numix-gtk-theme|numix-gtk-theme|exe,dev,doc,nls||deps:yes
 no|numlockx||exe| #needed by shinobars firstrun.
 no|opencv|libopencv-core*,libopencv-imgproc*|exe,dev>null,doc,nls #ffmpeg needs this. dep: libtbb2. have left off the dev deb.
 no|openjdk-jre|openjdk-11-jre,openjdk-11-jre-headless,ca-certificates-java,java-common|exe,dev,doc,nls #needed if icedtea selected
-yes|openldap|libldap-2.5-0|exe,dev,doc,nls||deps:yes
+no|openldap|libldap-2.5-0|exe,dev,doc,nls||deps:yes
 no|opensp|opensp,libosp-dev|exe>dev,dev,doc,nls|+sgml-base,+sgml-data,+xml-core
 yes|openssh-client|openssh-client|exe,dev,doc,nls||deps:yes
 yes|openssl|openssl,libssl3,libssl-dev|exe,dev,doc,nls||deps:yes #libssl1.0.2 = older libssl

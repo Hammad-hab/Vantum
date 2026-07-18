@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<menu>
+
+    <!-- Root Applications -->
+
+    <item name="Files" exec="thunar" icon="/usr/share/icons/hicolor/scalable/apps/org.xfce.thunar.svg"/>
+    <item name="Terminal" exec="urxvt" icon="/usr/share/pixmaps/Utility-shell.svg"/>
+
+    <folder name="Utilities">
+        <item name="Htop" exec="htop" icon="/usr/share/pixmaps/htop.png"/>
+        <item name="Pdict" exec="pdict" icon="/usr/share/pixmaps/puppy/book_dictionary.svg"/>
+        <item name="pFind" exec="pfind" icon="/usr/share/pixmaps/puppy/find.svg"/>
+        <item name="Xdelta" exec="xdelta_gui" icon="/usr/share/pixmaps/puppy/file_compare.svg"/>
+        <item name="Gcolor2" exec="gcolor2" icon="/usr/share/pixmaps/puppy/select-color.svg"/>
+        <item name="Font Viewer" exec="gfontsel" icon="/usr/share/pixmaps/puppy/font.svg"/>
+        <item name="xpdf" exec="xpdf" icon="/usr/share/icons/hicolor/scalable/apps/xpdf.svg"/>
+        <item name="PupCamera" exec="pupcamera" icon="/usr/share/pixmaps/puppy/photocamera.svg"/>
+    </folder>
+
+    <folder name="Sound">
+        <item name="PulseAudio Volume Control" exec="pavucontrol" icon="/usr/share/pixmaps/BuildingBlock.svg"/>
+        <item name="Mixer" exec="defaultaudiomixer" icon="/usr/share/pixmaps/puppy/sound_mixer.svg"/>
+    </folder>
+
+
+    <folder name="Puppy System">
+
+        <folder name="Setup">
+            <item name="QuickSetup" exec="quicksetup" icon="/usr/share/pixmaps/puppy/puppy_config.svg"/>
+            <item name="Puppy Setup" exec="wizardwizard" icon="/usr/share/pixmaps/puppy/puppy_config.svg"/>
+            <item name="ALSA Sound Wizard" exec="alsawizard" icon="/usr/share/pixmaps/puppy/sound.svg"/>
+            <item name="Internet Connection Wizard" exec="connectwizard" icon="/usr/share/pixmaps/puppy/internet_connect.svg"/>
+            <item name="Mouse/Keyboard Manager" exec="input-wizard" icon="/usr/share/pixmaps/puppy/mouse_keyboard.svg"/>
+            <item name="Screen/Graphics Manager" exec="xorgwizard" icon="/usr/share/pixmaps/puppy/graphics.svg"/>
+            <item name="Boot Manager" exec="bootmanager" icon="/usr/share/pixmaps/puppy/startup.svg"/>
+            <item name="Menu Manager" exec="menumanager" icon="/usr/share/pixmaps/puppy/menu.svg"/>
+            <item name="Set Default Apps" exec="puppyapps" icon="/usr/share/pixmaps/puppy/execute_inspect.svg"/>
+        </folder>
+
+        <folder name="Storage">
+            <item name="Pmount" exec="pmount" icon="/usr/share/pixmaps/puppy/harddisk.svg"/>
+            <item name="Partview" exec="partview" icon="/usr/share/pixmaps/puppy/partition.svg"/>
+            <item name="GParted" exec="gparted" icon="/usr/share/icons/hicolor/scalable/apps/gparted.svg"/>
+            <item name="PupMTP" exec="pupmtp" icon="/usr/share/pixmaps/mtp_device.svg"/>
+            <item name="Pudd" exec="Pudd" icon="/usr/share/pixmaps/puppy/copy_disk.svg"/>
+            <item name="Pupsave Backup" exec="pupsave-backup" icon="/usr/share/pixmaps/puppy/copy_disk.svg"/>
+            <item name="Resize Personal Storage" exec="resizepfile.sh" icon="/usr/share/pixmaps/puppy/puppy_increase.svg"/>
+            <item name="Puppy Installer" exec="/usr/sbin/dotpup1" icon="/usr/share/pixmaps/puppy/power.svg"/>
+            <item name="Remaster Puppy" exec="/usr/sbin/remasterpup2" icon="/usr/share/pixmaps/puppy/puppy_remaster.svg"/>
+        </folder>
+
+        <folder name="Appearance">
+            <item name="Desktop Settings" exec="pdesktop" icon="/usr/share/pixmaps/puppy/windows.svg"/>
+            <item name="Desktop Drive Icons Manager" exec="eventmanager desktop" icon="/usr/share/pixmaps/puppy/desktop_icons.svg"/>
+            <item name="Wallpaper Setter" exec="wallpaper" icon="/usr/share/pixmaps/puppy/wallpaper.svg"/>
+            <item name="Font Manager" exec="fontmanager" icon="/usr/share/pixmaps/puppy/font.svg"/>
+            <item name="Dunst Settings" exec="dunst-config" icon="/usr/share/icons/PMaterial/scalable/categories/preferences-desktop-theme.svg"/>
+            <item name="Icon Switcher" exec="icon_switcher" icon="/usr/share/pixmaps/puppy/desktop_icons.svg"/>
+            <item name="Screensaver Setup" exec="pupx" icon="/usr/share/pixmaps/puppy/screen_resolution.svg"/>
+        </folder>
+
+        <folder name="Packages">
+            <item name="Package Manager" exec="/usr/local/petget/pkg_chooser.sh" icon="/usr/share/pixmaps/puppy/package_add.svg"/>
+            <item name="Dependency Checker" exec="/usr/local/petget/check_deps_gui.sh" icon="/usr/share/pixmaps/puppy/package_inspect.svg"/>
+            <item name="Remove Builtin Packages" exec="/usr/sbin/remove_builtin" icon="/usr/share/pixmaps/puppy/package_remove.svg"/>
+        </folder>
+
+        <folder name="Networking">
+            <item name="Firewall Setup" exec="firewall_ng" icon="/usr/share/pixmaps/puppy/firewall.svg"/>
+            <item name="Pup-Advert-Blocker" exec="pup-advert-blocker" icon="/usr/share/pixmaps/puppy/dialog_stop.svg"/>
+            <item name="IPInfo" exec="ipinfo" icon="/usr/share/pixmaps/puppy/network.svg"/>
+        </folder>
+
+        <folder name="Localization">
+            <item name="Chooselocale" exec="chooselocale" icon="/usr/share/pixmaps/puppy/country_language.svg"/>
+            <item name="Psync" exec="psync" icon="/usr/share/pixmaps/puppy/clock.svg"/>
+            <item name="Set Date and Time" exec="set-time-for-puppy" icon="/usr/share/pixmaps/puppy/date_time.svg"/>
+            <item name="Set Timezone" exec="timezone-set" icon="/usr/share/pixmaps/puppy/country_timezone.svg"/>
+        </folder>
+
+        <folder name="Security">
+            <item name="Login Manager" exec="loginmanager" icon="/usr/share/pixmaps/puppy/user_login.svg"/>
+            <item name="Xlock" exec="puplock -locknow" icon="/usr/share/pixmaps/puppy/screen_lock.svg"/>
+            <item name="Xlock Setup" exec="/usr/local/apps/Xlock/AppRun -configure" icon="/usr/share/pixmaps/puppy/screen_lock.svg"/>
+            <item name="Bcrypt" exec="bcrypt_gui" icon="/usr/share/pixmaps/puppy/file_lock.svg"/>
+        </folder>
+
+        <folder name="Maintenance">
+            <item name="Event Manager" exec="eventmanager" icon="/usr/share/pixmaps/puppy/execute.svg"/>
+            <item name="pSchedule" exec="/usr/local/bin/pschedule" icon="/usr/share/pixmaps/puppy/clock_interval.svg"/>
+            <item name="MoManager" exec="momanager" icon="/usr/share/pixmaps/puppy/country_language.svg"/>
+            <item name="CUPS Print Manager" exec="cups_shell" icon="/usr/share/pixmaps/puppy/print.svg"/>
+            <item name="pMirror" exec="pmirror" icon="/usr/share/pixmaps/puppy/directory_execute.svg"/>
+            <item name="pTiming" exec="ptiming" icon="/usr/share/pixmaps/puppy/clock_stopwatch.svg"/>
+        </folder>
+
+    </folder>
+
+</menu>

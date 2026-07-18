@@ -1,8 +1,9 @@
-# Vantum
+<img src="assets/screenshot.png"/>
+
+<center><h1>Vantum</h1></center>
 
 **A lean, fast, custom Linux distribution built on Puppy Linux and Ubuntu Jammy.**
 
----
 
 ## What is Vantum?
 
