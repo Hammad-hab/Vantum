@@ -21,6 +21,26 @@ build() {
         echo "#!/usr/bin/env python3"
         cat _vantumMenuInit.py
     } > _vantumMenuInit.new && mv _vantumMenuInit.new vantyl-gen-menu
+
+    cat > vantyl-super <<'EOF'
+#!/bin/sh
+
+LOCK=/tmp/vantyl-toggle
+
+if [ -e "$LOCK" ]; then
+    exit 0
+fi
+
+touch "$LOCK"
+
+vantyl /root/.config/menu.xml
+
+sleep 0.2
+
+rm -f "$LOCK"
+EOF
+
     install -D -m 755 vantyl-gen-menu /usr/local/bin/vantyl-gen-menu
+    install -D -m 755 vantyl-super /usr/local/bin/vantyl-super
 }
 

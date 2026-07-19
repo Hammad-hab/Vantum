@@ -28,8 +28,9 @@ build() {
 <?xml version="1.0"?>
 <task>
     <launcher_cmd exec="vantyl /root/.config/menu.xml"/>
-    <pinned name="urxvt +sb" icon="/usr/share/pixmaps/puppy/terminal.svg" exec="urxvt"/>
-    <pinned name="Firefox" icon="/usr/share/icons/Puppy Standard/scalable/apps/firefox.svg" exec="firefox"/>
+    <pinned name="Terminal" icon="/usr/share/pixmaps/puppy/terminal.svg" exec="urxvt +sb"/>
+    <pinned name="Firefox" icon="/usr/share/icons/Puppy Standard/scalable/apps/firefox.svg" exec="firefox_esr"/>
+    <pinned name="Thunar" icon="/usr/share/icons/hicolor/scalable/apps/org.xfce.thunar.svg" exec="thunar"/>
 </task>
 EOF
 

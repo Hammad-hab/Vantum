@@ -11,13 +11,6 @@
 
 
 
-<!-- root menus for MOUSE activation -->
-<RootMenu label="1" labeled="false" height="MENHEIGHT" onroot="1"><Include>exec:$HOME/.jwm/root_menus/menu1</Include></RootMenu>
-<RootMenu label="2" labeled="false" height="MENHEIGHT" onroot="2"><Include>exec:$HOME/.jwm/root_menus/menu2</Include></RootMenu>
-<RootMenu label="3" labeled="false" height="MENHEIGHT" onroot="3"><Include>exec:$HOME/.jwm/root_menus/menu3</Include></RootMenu>
-<RootMenu label="4" labeled="false" height="MENHEIGHT" onroot="4"><Include>exec:$HOME/.jwm/root_menus/menu4</Include></RootMenu>
-<RootMenu label="5" labeled="false" height="MENHEIGHT" onroot="5"><Include>exec:$HOME/.jwm/root_menus/menu5</Include></RootMenu>
-
 <!-- root menus for TRAY activation -->
 <RootMenu label="6" labeled="false" height="MENHEIGHT" onroot="6"><Include>exec:/usr/local/jwm_config/menu_build_bookmarks</Include></RootMenu>
 <RootMenu label="7" labeled="false" height="MENHEIGHT" onroot="7"><Include>exec:/usr/local/jwm_config/menu_build_clock</Include></RootMenu>
@@ -148,6 +141,7 @@
 <ResizeMode>opaque</ResizeMode>
 
 <!-- Key bindings -->
+<Key key="Super_L">exec:vantyl-super</Key>
 <Key key="Up">up</Key>
 <Key key="Down">down</Key>
 <Key key="Right">right</Key>
