@@ -6,7 +6,7 @@
     <item name="Files" exec="thunar" icon="/usr/share/icons/hicolor/scalable/apps/org.xfce.thunar.svg"/>
     <item name="Terminal" exec="urxvt +sb" icon="/usr/share/pixmaps/Utility-shell.svg"/>
     <item name="Firefox" exec="firefox" icon="/usr/share/icons/Puppy Standard/scalable/apps/firefox.svg"/>
-    <item name="xpdf" exec="xpdf" icon="/usr/share/icons/hicolor/scalable/apps/xpdf.svg"/>
+    <item name="PDF" exec="epdfview" icon="/usr/share/icons/hicolor/scalable/apps/epdfview.svg"/>
 
     <folder name="Utilities">
         <item name="Htop" exec="htop" icon="/usr/share/pixmaps/htop.png"/>

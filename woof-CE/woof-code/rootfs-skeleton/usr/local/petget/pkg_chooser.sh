@@ -77,8 +77,6 @@ export -f options_status
 
 [ "$(cat /var/local/petget/si_category 2>/dev/null)" = "true" ] && options_status
 
-. /usr/lib/gtkdialog/box_splash -close never -text "$(gettext 'Loading Puppy Package Manager...')" &
-SPID=$!
 
 # Remove in case we crashed
 clean_flags () {
@@ -681,7 +679,6 @@ S='<window title="'$(gettext 'Package Manager v')''${VERSION}'" width-request="'
     <variable>VBOX_MAIN</variable>
   </vbox>
 </vbox>
-<action signal="show">kill -9 '$SPID'</action>
 <action signal="delete-event">echo -n > /tmp/petget_proc/pkgs_to_install</action>
 <action signal="delete-event">rm /tmp/petget_proc/petget/install_status</action>
 </window>'

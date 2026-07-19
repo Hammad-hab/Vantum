@@ -36,9 +36,10 @@ if [ ! -f /var/local/delayedrun_firstboot_flag ];then
   fi
   if [ $BOGOMIPS -lt 800 ] ; then
    sleep 20 # needs time especially on pi 1 and zero
-   welcome1stboot
+  #  welcome1stboot
   else
-   welcome1stboot
+  #  welcome1stboot
+  echo "Skipping first boot welcome"
   fi
   [ "$WOOF_TARGETARCH" = "x86" ] && sleep 3 # problem as tray applets only got launched after welcome msg exited.
   touch /var/local/delayedrun_firstboot_flag
