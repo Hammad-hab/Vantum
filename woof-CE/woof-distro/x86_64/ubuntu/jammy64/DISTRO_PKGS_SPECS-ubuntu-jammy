@@ -479,6 +479,7 @@ yes|man|man-db|exe,dev,doc,nls||deps:yes
 yes|mesa|libgbm1,libgbm-dev,libegl1,libegl-mesa0,libwayland-egl1,libegl1-mesa-dev,libgles1,libgles2,libgles-dev,libglvnd0,libglvnd-dev,libegl-dev,libglx0,libglx-dev,libglx-mesa0,libopengl-dev,libegl-amber0,libgl1-amber-dri,libglx-amber0|exe,dev,doc,nls||deps:yes #have most in xorg_base. these extra needed by gstreamer. GSTREAMER1.0
 yes|meson|meson|exe>dev,dev,doc,nls||deps:yes
 no|libxm4|libxm4|exe
+yes|chocolate-doom|chocolate-doom|exe,doc
 yes|freedoom|freedoom|exe,doc
 no|mhash|libmhash2,libmhash-dev|exe,dev,doc,nls
 no|mhwaveedit|mhwaveedit|exe,dev>null,doc,nls
