@@ -210,9 +210,10 @@ if [ "$CURRENTWM" != "jwm" -a "$CURRENTWM" != "icewm" ];then
 fi
 
 [ -f /usr/sbin/vantask ] && /usr/sbin/vantask /root/.config/task.xml &
+picom -b --backend xrender
+[ -f /root/tint2rc ] && tint2 -c /root/tint2rc &
 
 which $CURRENTWM && exec $CURRENTWM
 [ -x $CURRENTWM ] && exec $CURRENTWM
 [ "$desktop" = "rox" ] && exec jwm
-
 ###END###
