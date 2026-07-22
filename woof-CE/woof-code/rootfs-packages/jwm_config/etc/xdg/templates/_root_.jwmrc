@@ -9,8 +9,6 @@
 <!-- IMPORTANT, ONLY EDIT /etc/xdg/templates/_root_.jwmrc -->
 
 
-
-
 <!-- root menus for TRAY activation -->
 <RootMenu label="6" labeled="false" height="MENHEIGHT" onroot="6"><Include>exec:/usr/local/jwm_config/menu_build_bookmarks</Include></RootMenu>
 <RootMenu label="7" labeled="false" height="MENHEIGHT" onroot="7"><Include>exec:/usr/local/jwm_config/menu_build_clock</Include></RootMenu>
