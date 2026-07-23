@@ -479,9 +479,6 @@ yes|man|man-db|exe,dev,doc,nls||deps:yes
 yes|mesa|libgbm1,libgbm-dev,libegl1,libegl-mesa0,libwayland-egl1,libegl1-mesa-dev,libgles1,libgles2,libgles-dev,libglvnd0,libglvnd-dev,libegl-dev,libglx0,libglx-dev,libglx-mesa0,libopengl-dev,libegl-amber0,libgl1-amber-dri,libglx-amber0|exe,dev,doc,nls||deps:yes #have most in xorg_base. these extra needed by gstreamer. GSTREAMER1.0
 yes|meson|meson|exe>dev,dev,doc,nls||deps:yes
 no|libxm4|libxm4|exe
-yes|chocolate-doom|chocolate-doom|exe,doc
-yes|freedoom|freedoom|exe,doc
-
 no|mhash|libmhash2,libmhash-dev|exe,dev,doc,nls
 no|mhwaveedit|mhwaveedit|exe,dev>null,doc,nls
 no|mirdir||exe
@@ -690,8 +687,8 @@ no|xlock_gui||exe
 no|xlockmore||exe
 yes|hsetroot|hsetroot|exe,doc
 yes|feh|feh|exe,doc
-yes|picom|libconfig9,libdbus-1-3,libev4,libpcre3,libpixman-1-0,libx11-xcb1,libxcb1,libxcb-composite0,libxcb-damage0,libxcb-glx0,libxcb-image0,libxcb-present0,libxcb-randr0,libxcb-render0,libxcb-render-util0,libxcb-shape0,libxcb-sync1,libxcb-xfixes0,libxcb-xinerama0|exe,dev,doc,nls||deps:yes
-yes|tint2|libglib2.0-0,libimlib2,librsvg2-2|exe,dev,doc,nls||deps:yes
+yes|tint2|tint2,libglib2.0-0,libimlib2,librsvg2-2|exe,dev,doc,nls||deps:yes
+yes|picom|picom,libconfig9,libdbus-1-3,libev4,libpcre3,libpixman-1-0,libx11-xcb1,libxcb1,libxcb-composite0,libxcb-damage0,libxcb-glx0,libxcb-image0,libxcb-present0,libxcb-randr0,libxcb-render0,libxcb-render-util0,libxcb-shape0,libxcb-sync1,libxcb-xfixes0,libxcb-xinerama0|exe,dev,doc,nls||deps:yes
 yes|xml-core|xml-core|exe>dev,dev,doc,nls||deps:yes
 yes|xorg_base_new|libglapi-mesa,libx11-xcb1,xfonts-utils,mesa-common-dev,libgl1,x11-xkb-utils,x11-xserver-utils,x11-utils,x11-apps,fontconfig,fontconfig-config,libfontconfig-dev,libdrm2,libdrm-common,libdrm-dev,libdrm-radeon1,libdrm-amdgpu1,libdrm-nouveau2,libdrm-intel1,libepoxy0,libepoxy-dev,libfontconfig1,libfontconfig1-dev,libfontenc1,libfontenc-dev,libgl-dev,libglu1-mesa,libglu1-mesa-dev,libice6,libice-dev,libsm6,libsm-dev,libunwind8,libunwind-dev,libx11-6,libx11-dev,libx11-data,libxau6,libxau-dev,libxaw7,libxcomposite1,libxcomposite-dev,libxcursor1,libxcursor-dev,libxdamage1,libxdamage-dev,libxdmcp6,libxdmcp-dev,libxext6,libxext-dev,libxfixes3,libxfixes-dev,libxfont2,libxfont-dev,libxft2,libxft-dev,libxi6,libxi-dev,libxinerama1,libxkbfile1,libxkbfile-dev,libxmu6,libxmu-dev,libxmuu1,libxpm4,libxpm-dev,libxrandr2,libxrandr-dev,libxrender1,libxrender-dev,libxt6,libxt-dev,libxtst6,libxtst-dev,libxv1,libxxf86dga1,libxxf86vm1,xkb-data,xinput,xbitmaps,xauth,x11-common|exe,dev,doc,nls||deps:yes
 yes|xorg_dri|libgl1-mesa-dri,mesa-utils,libsensors5|exe,dev,doc,nls||deps:yes
@@ -713,4 +710,5 @@ yes|zip|zip|exe,dev>null,doc,nls||deps:yes
 yes|zlib|zlib1g,zlib1g-dev|exe,dev,doc,nls||deps:yes
 yes|zstd|zstd|exe,dev,doc,nls||deps:yes
 no|zzznet||exe
+yes|frogatto|frogatto,frogatto-data|exe,dev,doc,nls||deps:yes
 '
