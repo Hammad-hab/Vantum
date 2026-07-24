@@ -710,5 +710,5 @@ yes|zip|zip|exe,dev>null,doc,nls||deps:yes
 yes|zlib|zlib1g,zlib1g-dev|exe,dev,doc,nls||deps:yes
 yes|zstd|zstd|exe,dev,doc,nls||deps:yes
 no|zzznet||exe
-yes|frogatto|frogatto,frogatto-data|exe,dev,doc,nls||deps:yes
+yes|frogatto|frogatto,frogatto-data,libglew2.2|exe,dev,doc,nls||deps:yes
 '

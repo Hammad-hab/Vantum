@@ -6,9 +6,8 @@
 
 debootstrap=`command -v debootstrap || :`
 if [ -z "$debootstrap" ]; then
-	echo -n "WARNING: debootstrap is missing. Press ENTER to continue build without apt support or CTRL-C to abort the build: "
+	echo -n "WARNING: debootstrap is missing, exiting bdrv.sh"
 	[ -z "$GITHUB_ACTIONS" ] || exit 1
-	read isitbad
 	exit 0
 fi
 
