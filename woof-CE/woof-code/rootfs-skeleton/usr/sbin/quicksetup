@@ -139,7 +139,11 @@ XPID=0
 if  [ -n "$DISPLAY" -o -n "$WAYLAND_DISPLAY" ];then
  if [ "$PARAM1" != "nosplash" -a $NOSPLASH -eq 0 ];then
   WELCOMEMSG=$(printf "$(gettext 'Welcome to %s!')" "$DISTRO_NAME $DISTRO_VERSION")
-  /usr/lib/gtkdialog/box_splash -placement center -close never -fontsize large -icon_width 60 -icon  -text "$WELCOMEMSG" &
+  /usr/lib/gtkdialog/box_splash \
+  -placement center \
+  -close never \
+  -fontsize large \
+  -text "$WELCOMEMSG" &
   XPID=$!
  fi
 fi
