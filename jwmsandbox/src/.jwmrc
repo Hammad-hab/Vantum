@@ -56,4 +56,10 @@
     </Active>
   </MenuStyle>
 
+  <Group>
+    <Class>.*</Class>
+    <Option>aerosnap</Option>
+    <Option>constrain</Option>
+</Group>
+<Key mask="A" key="F4">close</Key>
 </JWM>

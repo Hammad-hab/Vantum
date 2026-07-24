@@ -14,6 +14,12 @@
 <RootMenu label="7" labeled="false" height="MENHEIGHT" onroot="7"><Include>exec:/usr/local/jwm_config/menu_build_clock</Include></RootMenu>
 <RootMenu label="8" labeled="false" height="MENHEIGHT" onroot="8"><Include>exec:/usr/local/jwm_config/menu_build_places</Include></RootMenu>
 
+<Group>
+    <Class>.*</Class>
+    <Option>aerosnap</Option>
+    <Option>constrain</Option>
+</Group>
+
 <!-- jwm menus for puppy Linux -->
 
 <!-- General classes -->
@@ -160,6 +166,7 @@
 <Key mask="A" key="minus">minimize</Key>
 <Key mask="A" key="bracketleft">maxleft</Key>
 <Key mask="A" key="bracketright">maxright</Key>
+<Key mask="A" key="F4">close</Key>
 
 <Key mask="A" key="Tab">nextstacked</Key>
 <Key mask="AS" key="Tab">prevstacked</Key>
