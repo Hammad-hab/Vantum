@@ -2,8 +2,6 @@
 
 . /etc/profile
 
-export PS1='\[\e[1;36m\][chroot]\[\e[0m\] \[\e[1;33m\]\w\[\e[0m\] \$ '
-echo "Welcome to run_woof"
 cd /root/share
 
 # CHECK_FOR_UPDATES and MERGE_UPDATES are defined in run_woof.conf
