@@ -1,16 +1,25 @@
 #!/bin/bash
 set -euo pipefail
 
+if [ ! -d "./_slogs" ]; then
+    echo "Creating log directory"
+    mkdir -p ./_slogs
+else
+    echo "Clearing log directory..."
+    rm -rf ./_slogs
+    mkdir -p ./_slogs
+fi
+
 echo "[1/4] Running 0setup..."
-./0setup
+./0setup > ./_slogs/0setup.log 2>&1
 
 echo "[2/4] Running 1download..."
-./1download
+./1download > ./_slogs/1download.log 2>&1
 
 echo "[3/4] Running 2createpackages..."
-./2createpackages -all
+./2createpackages -all > ./_slogs/2createpackages.log 2>&1
 
 echo "[4/4] Running 3builddistro-Z..."
-./3builddistro-Z
+./3builddistro-Z > ./_slogs/3builddistro.log 2>&1
 
 echo "Build completed successfully."
