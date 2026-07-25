@@ -2,7 +2,7 @@
 
 . /etc/profile
 
-PS1="run_woof\\$ "
+export PS1='\[\e[1;36m\][chroot]\[\e[0m\] \[\e[1;33m\]\w\[\e[0m\] \$ '
 echo "Welcome to run_woof"
 cd /root/share
 
