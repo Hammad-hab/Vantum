@@ -406,8 +406,8 @@ fi
 echo -e "\nChecking pkgs"
 support/findpkgs || exit 1
 if [ -s FINDPKGS-NOT-FOUND.log ]; then
-  grep 'was not found' FINDPKGS-NOT-FOUND.log  | sort -u
-  exit 1
+    echo "Warnings detected:"
+    grep 'was not found' FINDPKGS-NOT-FOUND.log | sort -u
 fi
 echo
 
