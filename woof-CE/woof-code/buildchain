@@ -1,0 +1,14 @@
+#!/bin/bash
+set -euo pipefail
+
+echo "[Running]: Setup"
+./0setup
+
+echo "[Running]: Download"
+./1download
+
+echo "Creating packages (all)"
+./2createpackages -all
+
+echo "Building Distro"
+./3builddistro-Z
