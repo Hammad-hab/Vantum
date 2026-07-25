@@ -128,21 +128,31 @@ elif [ -d "$SHARE_MNT/run_woof-master" ]; then
 fi
 
 if [ "${2#*64_}" != "$2" ]; then
-	chroot $AUFS_MNT \
+	chroot "$AUFS_MNT" \
 		gdk-pixbuf-query-loaders --update-cache
 
 	LC_ALL=C \
 	LANG=C \
 	HOME=/root \
 	XAUTHORITY=/root/.Xauthority \
-	chroot $AUFS_MNT /bin/bash -ic 'cd /root/share && echo "You are now entering run_woof shell $1" && exec /bin/bash -i'
+	chroot "$AUFS_MNT" /bin/bash -ic '
+		cd /root/share &&
+		echo "export PS1='\''\[\e[1;36m\][chroot]\[\e[0m\] \[\e[1;33m\]\w\[\e[0m\] \$ '\''" >> /etc/profile &&
+		echo "You are now entering run_woof shell $1" &&
+		exec /bin/bash -i
+	'
 else
-	linux32 chroot $AUFS_MNT \
+	linux32 chroot "$AUFS_MNT" \
 		gdk-pixbuf-query-loaders --update-cache
 
 	LC_ALL=C \
 	LANG=C \
 	HOME=/root \
 	XAUTHORITY=/root/.Xauthority \
-	linux32 chroot $AUFS_MNT /bin/bash -ic 'cd /root/share && echo "You are now entering run_woof shell $1" && exec /bin/bash -i'
+	linux32 chroot "$AUFS_MNT" /bin/bash -ic '
+		cd /root/share &&
+		echo "export PS1='\''\[\e[1;36m\][chroot]\[\e[0m\] \[\e[1;33m\]\w\[\e[0m\] \$ '\''" >> /etc/profile &&
+		echo "You are now entering run_woof shell $1" &&
+		exec /bin/bash -i
+	'
 fi
