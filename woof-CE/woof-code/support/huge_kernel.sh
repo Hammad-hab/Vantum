@@ -14,7 +14,7 @@ if [ -L woof-code ] ; then # zwoof-next
 else
 	HUGE_KERNEL_DIR=../huge_kernel
 fi
-
+KERNEL_CHOICE="${KERNEL_CHOICE:-}"
 if [ ! -d ../../local-repositories/huge_kernels ] ; then
 	rm -f ../../local-repositories/huge_kernels
 fi
@@ -164,11 +164,22 @@ choose_kernel() {
 	do
 		echo "Please choose the number of the kernel you wish to use"
 		cat $TMP
-		read choice_k3
-		choice3=`grep ^$choice_k3 $TMP`
-		[ ! "$choice3" ] && echo "invalid choice3" && continue
-		echo "You chose ${choice3##* }."
-		sleep 3
+		if [ -n "$KERNEL_CHOICE" ]; then
+			choice_k3="$KERNEL_CHOICE"
+			echo "Automatically selecting kernel #$choice_k3"
+			choice3=$(grep "^$choice_k3 " "$TMP")
+			if [ -z "$choice3" ]; then
+				echo "Invalid kernel choice: $choice_k3"
+				rm -f "$TMP"
+				exit 1
+			fi
+		else
+			read choice_k3
+			choice3=`grep ^$choice_k3 $TMP`
+			[ ! "$choice3" ] && echo "invalid choice3" && continue
+			echo "You chose ${choice3##* }."
+			sleep 3
+		fi
 		break
 	done
 	KERNEL_VERSION=`echo ${choice3##* } |cut -d '-' -f2-|rev|cut -d '.' -f3-|rev`
