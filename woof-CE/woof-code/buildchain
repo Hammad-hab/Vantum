@@ -1,14 +1,16 @@
 #!/bin/bash
 set -euo pipefail
 
-echo "[Running]: Setup"
+echo "[1/4] Running 0setup..."
 ./0setup
 
-echo "[Running]: Download"
+echo "[2/4] Running 1download..."
 ./1download
 
-echo "Creating packages (all)"
+echo "[3/4] Running 2createpackages..."
 ./2createpackages -all
 
-echo "Building Distro"
+echo "[4/4] Running 3builddistro-Z..."
 ./3builddistro-Z
+
+echo "Build completed successfully."
