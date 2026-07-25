@@ -21,6 +21,7 @@ if [ "`whoami`" != "root" ] ; then
 	exit 1
 fi
 
+
 [ -d ./woof-code ] || [ -d ./woof-distro ] || exit
 
 if [ "$1" != "" ]; then
@@ -310,8 +311,10 @@ fi
 
 echo
 echo "Directory '${WOOF_OUT}'
+
 is now normal (the workarounds have been removed). Note,
 ../local-repositories has been created (if not already),
 to be used as a common binary package download place."
 
+cd $WOOF_OUT
 ### END ###
