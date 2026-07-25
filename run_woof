@@ -140,7 +140,7 @@ if [ "${2#*64_}" != "$2" ]; then
 		echo "export PS1='\''\[\e[1;36m\][chroot]\[\e[0m\] \[\e[1;33m\]\w\[\e[0m\] \$ '\''" >> /etc/profile &&
 		source /etc/profile &&
 		echo "You are now entering run_woof shell $1" &&
-		exec /bin/bash -i
+		exec /bin/bash --rcfile /etc/profile -i
 	'
 else
 	linux32 chroot "$AUFS_MNT" \
@@ -155,6 +155,6 @@ else
 		echo "export PS1='\''\[\e[1;36m\][chroot]\[\e[0m\] \[\e[1;33m\]\w\[\e[0m\] \$ '\''" >> /etc/profile &&
 		source /etc/profile &&
 		echo "You are now entering run_woof shell $1" &&
-		exec /bin/bash -i
+		exec /bin/bash --rcfile /etc/profile -i
 	'
 fi
