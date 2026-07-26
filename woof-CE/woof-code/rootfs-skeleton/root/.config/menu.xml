@@ -8,7 +8,6 @@
     <item name="Firefox" exec="firefox" icon="/usr/share/icons/Puppy Standard/scalable/apps/firefox.svg"/>
     <item name="PDF" exec="epdfview" icon="/usr/share/icons/hicolor/scalable/apps/epdfview.svg"/>
     <item name="GParted" exec="gparted" icon="/usr/share/icons/hicolor/scalable/apps/gparted.svg"/>
-    <item name="Frogatto" exec="frogatto" icon="/usr/share/icons/hicolor/256x256/apps/frogatto.png"/>
     <item name="Leafpad" exec="l3afpad" icon="/usr/share/icons/hicolor/256x256/apps/l3afpad.png"/>
 
     <folder name="Utilities">
