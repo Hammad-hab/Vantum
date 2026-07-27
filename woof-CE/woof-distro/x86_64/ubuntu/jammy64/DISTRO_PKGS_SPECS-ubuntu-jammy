@@ -632,7 +632,7 @@ yes|syslinux|syslinux,syslinux-common,syslinux-utils,syslinux-efi,extlinux,isoli
 no|taglib|libtag1v5,libtag1-dev,libtag1v5-vanilla|exe,dev,doc,nls #needed by lots of media apps.
 yes|tar|tar|exe,dev>null,doc,nls||deps:yes
 no|tas||exe,nls
-no|tbb|libtbb2|exe,dev>null,doc,nls #needed by libopencv-core. have left off the dev.
+no|tbb|libtbb2|exe,dev>null,doc,nls #needed by gilibopencv-core. have left off the dev.
 no|tcp-wrappers|libwrap0|exe,dev,doc,nls||deps:yes #needed by mplayer, skype
 yes|tdb|libtdb1|exe,dev,doc,nls||deps:yes #needed by mplayer and libcanberra.
 no|telepathy-glib|libtelepathy-glib0|exe,dev,doc,nls #needed by abiword. left out -dev lib.
@@ -710,5 +710,4 @@ yes|zip|zip|exe,dev>null,doc,nls||deps:yes
 yes|zlib|zlib1g,zlib1g-dev|exe,dev,doc,nls||deps:yes
 yes|zstd|zstd|exe,dev,doc,nls||deps:yes
 no|zzznet||exe
-yes|frogatto|frogatto,frogatto-data,libglew2.2,libsdl-image1.2,libsdl-mixer1.2,libsdl-ttf2.0-0,libsdl1.2debian,fonts-freefont-ttf,libboost-regex1.74.0,libmikmod3,libtiff5,libwebp6,libsmpeg0|exe,dev,doc,nls||deps:yes
 '
