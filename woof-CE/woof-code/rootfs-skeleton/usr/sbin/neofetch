@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+# vfetch - neofetch-style system info with the big Vantum "V" logo
+
+c1="\033[1;35m"   # logo color (purple)
+c2="\033[1;37m"   # labels
+cv="\033[1;36m"   # values
+cr="\033[0m"      # reset
+
+# ---- gather info ----
+user="${USER:-$(whoami)}"
+host="$(hostname 2>/dev/null)"
+
+os="$(grep -m1 '^PRETTY_NAME=' /etc/os-release 2>/dev/null | cut -d= -f2 | tr -d '"')"
+[ -z "$os" ] && os="$(uname -s)"
+
+kernel="$(uname -r)"
+
+uptime_raw="$(uptime -p 2>/dev/null)"
+[ -z "$uptime_raw" ] && uptime_raw="$(awk '{u=$1; d=int(u/86400); h=int((u%86400)/3600); m=int((u%3600)/60); printf "%dd %dh %dm", d,h,m}' /proc/uptime 2>/dev/null)"
+
+shell_name="$(basename "${SHELL:-sh}")"
+
+if command -v xrandr >/dev/null 2>&1 && [ -n "$DISPLAY" ]; then
+    resolution="$(xrandr --current 2>/dev/null | grep '*' | awk '{print $1}' | paste -sd ', ' -)"
+fi
+[ -z "$resolution" ] && resolution="N/A"
+
+wm="${DESKTOP_SESSION:-${XDG_CURRENT_DESKTOP:-JWM}}"
+
+cpu="$(grep -m1 'model name' /proc/cpuinfo 2>/dev/null | cut -d: -f2 | sed 's/^ *//')"
+[ -z "$cpu" ] && cpu="$(uname -p)"
+
+if [ -f /proc/meminfo ]; then
+    mem_total=$(awk '/MemTotal/{print int($2/1024)}' /proc/meminfo)
+    mem_avail=$(awk '/MemAvailable/{print int($2/1024)}' /proc/meminfo)
+    mem_used=$((mem_total - mem_avail))
+    memory="${mem_used}MiB / ${mem_total}MiB"
+else
+    memory="N/A"
+fi
+
+packages="N/A"
+if command -v pkgtool >/dev/null 2>&1; then
+    packages="$(pkgtool -query 2>/dev/null | wc -l) (pkgtool)"
+elif command -v dpkg >/dev/null 2>&1; then
+    packages="$(dpkg -l 2>/dev/null | grep -c '^ii') (dpkg)"
+fi
+
+
+# ---- big block "V" logo, 27 cols wide x 25 rows ----
+logo_plain=(
+"VVVVVVVV           VVVVVVVV"
+"V::::::V           V::::::V"
+"V::::::V           V::::::V"
+"V::::::V           V::::::V"
+" V:::::V           V:::::V "
+"  V:::::V         V:::::V  "
+"   V:::::V       V:::::V   "
+"    V:::::V     V:::::V    "
+"     V:::::V   V:::::V     "
+"      V:::::V V:::::V      "
+"       V:::::V:::::V       "
+"        V:::::::::V        "
+"         V:::::::V         "
+"          V:::::V          "
+"           V:::V           "
+"            VVV            "
+
+)
+
+colors=""
+for i in {0..8}; do
+    colors+="\e[48;5;${i}m   \e[0m"
+done
+info=(
+"${c2}${user}${cr}@${c2}${host}${cr}"
+"---------------------"
+"${c2}OS${cr}: ${cv}${os}${cr}"
+"${c2}Kernel${cr}: ${cv}${kernel}${cr}"
+"${c2}Uptime${cr}: ${cv}${uptime_raw}${cr}"
+"${c2}Packages${cr}: ${cv}${packages}${cr}"
+"${c2}Shell${cr}: ${cv}${shell_name}${cr}"
+"${c2}Resolution${cr}: ${cv}${resolution}${cr}"
+"${c2}WM${cr}: ${cv}${wm}${cr}"
+"${c2}CPU${cr}: ${cv}${cpu}${cr}"
+"${c2}Memory${cr}: ${cv}${memory}${cr}"
+""
+"${c2}${colors}${cr}"
+)
+
+logo_width=27
+blank_line="$(printf '%*s' "$logo_width" '')"
+max=${#logo_plain[@]}
+[ ${#info[@]} -gt $max ] && max=${#info[@]}
+
+echo
+for ((i=0; i<max; i++)); do
+    l="${logo_plain[$i]:-$blank_line}"
+    r="${info[$i]:-}"
+    printf "  ${c1}%s${cr}   %b\n" "$l" "$r"
+done
+echo
