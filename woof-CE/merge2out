@@ -148,7 +148,11 @@ echo "Compatible-distro:     $COMPATDISTRO"
 echo "Compat-distro version: $COMPATVERSION"
 echo
 echo -n "If these are ok, press ENTER, other CTRL-C to quit: "
-read waitforit
+if ["$RIGVANTUM" -eq 1]; then 
+   echo "Auto continue..."
+else
+	read waitforit
+fi
 
 #-------
 if [ "$COMPATVERSION_DIR" = "" ]; then
@@ -182,7 +186,11 @@ echo "(Also, all files in folders 'boot', 'packages-templates',
  'kernel-kit' and 'initrd-progs' will be deleted.)"
 echo
 echo -n 'Press ENTER to continue: '
-read goforit
+if ["$RIGVANTUM" -eq 1]; then 
+   echo "Auto continue..."
+else
+	read goforit
+fi
 
 sdirs='boot initrd-progs kernel-kit packages-templates rootfs-packages rootfs-petbuilds rootfs-skeleton support'
 
