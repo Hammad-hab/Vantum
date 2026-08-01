@@ -350,8 +350,8 @@ to be used as a common binary package download place."
 
 if [ "$BUILDCHAIN" -eq 1 ]; then
 	cd $WOOF_OUT
-	echo "Executing buildchain automatically"
-	exec ./buildchain
+	echo "Executing buildchain automatically\n\n\n"
+	./buildchain
 fi
 
 ### END ###
