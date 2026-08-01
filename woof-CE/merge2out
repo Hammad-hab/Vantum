@@ -21,6 +21,11 @@ if [ "`whoami`" != "root" ] ; then
 	exit 1
 fi
 
+RIGVANTUM=0
+
+if [ "$1" = "--rigvantum" ]; then
+    RIGVANTUM=1
+fi
 
 [ -d ./woof-code ] || [ -d ./woof-distro ] || exit
 
@@ -75,8 +80,13 @@ while [ "$TARGETARCH" = "" ] ; do
 		echo "$CNT  $ONEARCH"
 		CNT=$(($CNT + 1))
 	done
-	echo -n 'Type number of target architecture: '
-	read nTARGETARCH
+	if [ "$RIGVANTUM" -eq 1 ]; then
+		echo "Choosing vantum defaults..."
+		nTARGETARCH=1
+	else
+		echo -n 'Type number of target architecture: '
+		read nTARGETARCH
+	fi
 	TARGETARCH="`find woof-distro -mindepth 1 -maxdepth 1 -type d | sed -e 's%^woof-distro/%%' | sort | head -n $nTARGETARCH 2>/dev/null | tail -n 1`"
 done
 echo "...ok, $TARGETARCH"
@@ -93,8 +103,13 @@ while [ "$COMPATDISTRO" = "" ] ; do
 		echo "$CNT  $ONEDISTRO"
 		CNT=$(($CNT + 1))
 	done
-	echo -n 'Type number of compat-distro: '
-	read nCOMPATDISTRO
+	if [ "$RIGVANTUM" -eq 1 ]; then
+		echo "Choosing vantum defaults..."
+		nCOMPATDISTRO=1
+	else
+		echo -n 'Type number of compat-distro: '
+		read nCOMPATDISTRO
+	fi
 	COMPATDISTRO="`find woof-distro/${TARGETARCH} -mindepth 1 -maxdepth 1 -type d | sed -e "${taPTN}" | sort | head -n $nCOMPATDISTRO 2>/dev/null | tail -n 1`"
 done
 echo "...ok, $COMPATDISTRO"
@@ -118,8 +133,13 @@ while [ "$COMPATVERSION" = "" ] ; do
 		COMPATVERSION="`find woof-distro/${TARGETARCH}/${COMPATDISTRO} -maxdepth 1 -mindepth 1 -type d | rev | cut -f 1 -d '/' | rev | sort | head -n 1 2>/dev/null | tail -n 1`"
 		continue
 	fi
-	echo -n 'Type number of release: '
-	read nCOMPATVERSION
+	if [ "$RIGVANTUM" -eq 1 ]; then
+		echo "Choosing vantum defaults..."
+		nCOMPATVERSION=1
+	else
+		echo -n 'Type number of release: '
+		read nCOMPATVERSION
+	fi
 	COMPATVERSION="`find woof-distro/${TARGETARCH}/${COMPATDISTRO} -maxdepth 1 -mindepth 1 -type d | rev | cut -f 1 -d '/' | rev | sort | head -n $nCOMPATVERSION 2>/dev/null | tail -n 1`"
 done
 echo "...ok, $COMPATVERSION"

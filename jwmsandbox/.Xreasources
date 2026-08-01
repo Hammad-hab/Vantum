@@ -1,0 +1,17 @@
+XLock*mode: matrix
+XLock*matrixIcon: on
+XLock*font: -*-terminus-bold-r-*-*-18-*
+XLock*background: black
+XLock*foreground: green
+XLock*Foreground: green
+XLock*Background: black
+XLock*delay: 20000
+XLock*batchcount: 200
+XLock*timeout: 30
+XLock*lockdelay: 0
+XLock*nice: 10
+XLock*fps: on
+XLock*fullscreen: true
+XLock*echokeys: false
+XLock*allowroot: false
+XLock*description: false

@@ -19,7 +19,6 @@ sleep 0.5
 
 DISPLAY=:1 jwm -f /tmp/jwm_resolved.jwmrc &
 sleep 0.5
-DISPLAY=:1 pasystray &
 
 DISPLAY=:1 tint2 -c "$SCRIPT_DIR/tint2rc" &
 sleep 0.5
@@ -27,4 +26,7 @@ sleep 0.5
 DISPLAY=:1 xterm &
 DISPLAY=:1 xeyes &
 DISPLAY=:1 feh --bg-fill wallpaper.jpg
+
+xrdb -merge ~/.Xresources
+DISPLAY=:1 xlock -mode matrix
 set -x

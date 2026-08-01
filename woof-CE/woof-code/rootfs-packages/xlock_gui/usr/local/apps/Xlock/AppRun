@@ -132,7 +132,7 @@ if [ ! "`echo "$PARAM1" | grep --extended-regexp "configure|inroot"`" = "" ];the
  # -size number         --size of an object
  # -erasemode           --random_lines, random_squares, venetian, triple_wipe, quad_wipe, circle_wipe, three_circle_wipe, squaretate,  fizzle,   spiral,   slide_lines,   losira, no_fade
  # -erasedelay microseconds --time of each step of erase
-
+ 
  #paranoid precaution...
  if [ "`echo "$MODE" | grep --extended-regexp "solitare|mandelbrot|swirl|spiral|penrose|matrix|lyapunov|goop|dclock|ball|blank"`" = "" ];then
   MODE="$CURRMODE"
