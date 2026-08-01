@@ -21,11 +21,7 @@ if [ "`whoami`" != "root" ] ; then
 	exit 1
 fi
 
-RIGVANTUM=0
-
-if [ "$1" = "--rigvantum" ]; then
-    RIGVANTUM=1
-fi
+RIGVANTUM="${RIGVANTUM:-0}"
 
 [ -d ./woof-code ] || [ -d ./woof-distro ] || exit
 
