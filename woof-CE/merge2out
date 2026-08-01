@@ -22,6 +22,7 @@ if [ "`whoami`" != "root" ] ; then
 fi
 
 RIGVANTUM="${RIGVANTUM:-0}"
+BUILDCHAIN="${BUILDCHAIN:-0}"
 
 [ -d ./woof-code ] || [ -d ./woof-distro ] || exit
 
@@ -148,7 +149,7 @@ echo "Compatible-distro:     $COMPATDISTRO"
 echo "Compat-distro version: $COMPATVERSION"
 echo
 echo -n "If these are ok, press ENTER, other CTRL-C to quit: "
-if ["$RIGVANTUM" -eq 1]; then 
+if [ "$RIGVANTUM" -eq 1 ]; then 
    echo "Auto continue..."
 else
 	read waitforit
@@ -186,7 +187,7 @@ echo "(Also, all files in folders 'boot', 'packages-templates',
  'kernel-kit' and 'initrd-progs' will be deleted.)"
 echo
 echo -n 'Press ENTER to continue: '
-if ["$RIGVANTUM" -eq 1]; then 
+if [ "$RIGVANTUM" -eq 1 ]; then 
    echo "Auto continue..."
 else
 	read goforit
@@ -340,5 +341,11 @@ is now normal (the workarounds have been removed). Note,
 ../local-repositories has been created (if not already),
 to be used as a common binary package download place."
 
-cd $WOOF_OUT
+
+if [ "$BUILDCHAIN" -eq 1 ]; then
+	cd $WOOF_OUT
+	echo "Executing buildchain automatically"
+	exec ./buildchain
+fi
+
 ### END ###
