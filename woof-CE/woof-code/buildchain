@@ -23,7 +23,6 @@ echo "[3/4] Running 2createpackages..."
 echo "[4/4] Running 3builddistro-Z..."
 
 # By default choose foosapup kernel
-export KERNEL_CHOICE=44
 ./3builddistro-Z 2>&1 | tee ./_slogs/3builddistro.log
 
 echo "Build completed successfully."

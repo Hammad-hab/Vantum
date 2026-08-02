@@ -25,10 +25,11 @@ Ubuntu Jammy (22.04 LTS) was chosen as the package base because it hits a sweet 
 
 - **Custom JWM configuration** — the window manager is tuned with a specific panel layout, keybindings, and theme out of the box
 - **Custom GTK appearance** — a cohesive visual identity applied from first boot, not something you configure afterward
-- **Custom launcher** — a purpose-built application launcher compiled from source and baked directly into the ISO
+- **Custom launcher** — a purpose-built application launcher compiled from source and baked directly into the ISO (Vantyl & Vantum)
 - **Stripped-down default app set** — only what's needed, nothing that isn't
-- **Reproducible build** — the entire OS can be rebuilt from source on a fresh machine using this repository
-
+- **Reproducible build** — the entire OS can be rebuilt from source on a fresh machine using this repository, on ubuntu/multipass
+- **Lightweight, but not ugly** - Vantum aims to feel and run exactly like puppy but without the old UI.
+- **Configure, everything** - From the taskbar, top bar and applauncher, everything can be configured using their corresponding xml scripts OR, if you're feeling extra brave, you can even edit the entire python script and make it your own.
 ---
 
 ## Technical overview
@@ -73,8 +74,8 @@ multipass launch 22.04 --disk 50G --memory 8G --cpus 4 --name beasos-build
 multipass shell beasos-build
 
 # Inside the VM
-git clone https://github.com/yourusername/woof-CE
-cd woof-CE
+git clone https://github.com/Hammad-hab/Vantum
+cd Vantum
 
 # Download FossaPup64 base (required, not in repo — too large)
 wget http://distro.ibiblio.org/puppylinux/puppy-fossa/fossapup64-9.5.iso
@@ -84,16 +85,8 @@ wget https://archive.org/download/puppy_linux_-fossapup64/devx_fossapup64_9.5_cm
 # Enter the build chroot
 sudo ./run_woof ./fossapup64-9.5.iso ./devx_fossapup64_9.5.sfs .
 
-# Inside the chroot
-mkdir -p /tmp/petget_proc
-cd /root/share/woof-CE
-./merge2out  # select jammy64 when prompted
-
-cd ../woof-out_x86_64_x86_64_ubuntu_jammy64
-./0setup
-./1download
-./2createpackages
-./3builddistro-Z
+cd woof-CE
+BUILDCHAIN=1 RIGVANTUM=1 KERNEL_CHOICE=44 source ./merge2out 
 ```
 
 The output ISO will appear in `woof-output/` when the build completes.
