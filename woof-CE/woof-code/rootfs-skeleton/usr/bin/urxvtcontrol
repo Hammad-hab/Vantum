@@ -1,0 +1,677 @@
+#!/usr/bin/env python3
+"""
+Xresources-style property editor — GTK3 version.
+
+Loads a file like:
+    URxvt.background: #111317
+    URxvt.color1:  #f7768e
+    URxvt.font:    xft:DejaVu Sans Mono:pixelsize=15
+    !URxvt.scrollBar: false      <- disabled/commented line
+
+Lets you browse and edit values in a GTK3 window, then save back to
+the file, preserving comments, blank lines, and line order.
+
+Usage:
+    python3 xres_editor_gtk.py path/to/file.Xresources
+
+Requires: python3-gi, gir1.2-gtk-3.0 (PyGObject + GTK3)
+
+UI:
+    - Double-click / Enter on a row's Value cell to edit it inline.
+    - Rows whose value is a #hex color get a color swatch; click the
+      swatch (or activate the Value cell) to open a GTK color picker
+      instead of typing the hex code by hand.
+    - Rows whose value is an "xft:..." font spec get a live font
+      preview; click it (or activate the Value cell) to open a GTK
+      font chooser instead of typing the xft string by hand.
+    - "Add Property" (or Ctrl+N) inserts a new key/value row right
+      after the currently selected row, or at the end if none is
+      selected.
+    - Click the checkbox in the "On" column to toggle disabled (!) state.
+    - Ctrl+S or the Save button writes the file.
+    - Window title shows a "*" marker when there are unsaved changes.
+    - Closing with unsaved changes prompts to save/discard/cancel.
+"""
+
+import re
+import sys
+import os
+import gi
+
+gi.require_version("Gtk", "3.0")
+gi.require_version("Pango", "1.0")
+from gi.repository import Gdk, GLib, Gtk, Pango
+
+# Matches lines like:  URxvt.font: xft:DejaVu Sans Mono:pixelsize=15
+# and disabled ones:   !URxvt.scrollBar: false
+LINE_RE = re.compile(r'^(?P<disabled>!?)(?P<key>[^:!\s][^:]*?)\s*:\s*(?P<value>.*)$')
+
+# Matches #rgb or #rrggbb values, e.g. #fff or #f7768e
+COLOR_RE = re.compile(r'^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$')
+
+
+def parse_xft_font(value: str) -> dict:
+    """Parse an 'xft:Family:key=value:flag' string into a dict.
+
+    Raises ValueError if value isn't an xft font spec.
+    """
+    parts = value.split(":")
+
+    if not parts or parts[0].lower() != "xft":
+        raise ValueError("Not an Xft font specification")
+
+    result = {
+        "type": "xft",
+        "family": parts[1] if len(parts) > 1 and parts[1] else None,
+    }
+
+    for part in parts[2:]:
+        if "=" in part:
+            k, v = part.split("=", 1)
+            result[k] = v
+        elif part:
+            result[part] = True
+
+    return result
+
+
+def render_xft_font(font_dict):
+    """Rebuild an 'xft:Family:key=value:flag' string from a parsed dict."""
+    family = font_dict.get("family") or "Sans"
+    parts = ["xft", family]
+    for k, v in font_dict.items():
+        if k in ("type", "family"):
+            continue
+        if v is True:
+            parts.append(k)
+        else:
+            parts.append(f"{k}={v}")
+    return ":".join(parts)
+
+
+def is_xft_font(value):
+    """True if value parses as an xft font spec."""
+    if not value:
+        return False
+    try:
+        parse_xft_font(value)
+        return True
+    except ValueError:
+        return False
+
+
+def xft_dict_to_font_desc(font_dict):
+    """Build a Pango.FontDescription from a parsed xft dict, for previews
+    and to seed the font chooser dialog."""
+    family = font_dict.get("family") or "Sans"
+    size = font_dict.get("pixelsize") or font_dict.get("size") or "12"
+    try:
+        size_val = float(size)
+    except (TypeError, ValueError):
+        size_val = 12.0
+
+    desc = Pango.FontDescription()
+    desc.set_family(family)
+    desc.set_size(max(1, int(round(size_val))) * Pango.SCALE)
+    if font_dict.get("bold"):
+        desc.set_weight(Pango.Weight.BOLD)
+    if font_dict.get("italic"):
+        desc.set_style(Pango.Style.ITALIC)
+    return desc
+
+
+def font_desc_to_xft_dict(font_desc, original=None):
+    """Convert a Pango.FontDescription (from the font chooser) back into
+    an xft dict, keeping whichever size key ('pixelsize' vs 'size') the
+    original value used."""
+    family = font_desc.get_family() or (original.get("family") if original else None) or "Sans"
+    size_key = "pixelsize"
+    if original:
+        if "size" in original and "pixelsize" not in original:
+            size_key = "size"
+
+    size_pts = font_desc.get_size() / Pango.SCALE if font_desc.get_size() else 12
+    result = {"type": "xft", "family": family, size_key: str(int(round(size_pts)))}
+
+    weight = font_desc.get_weight()
+    try:
+        is_bold = int(weight) >= int(Pango.Weight.BOLD)
+    except (TypeError, ValueError):
+        is_bold = False
+    if is_bold:
+        result["bold"] = True
+
+    style = font_desc.get_style()
+    if style in (Pango.Style.ITALIC, Pango.Style.OBLIQUE):
+        result["italic"] = True
+
+    return result
+
+
+def parse_color(value):
+    """Return a Gdk.RGBA if value looks like a #hex color, else None."""
+    if not value:
+        return None
+    m = COLOR_RE.match(value.strip())
+    if not m:
+        return None
+    hexstr = m.group(1)
+    if len(hexstr) == 3:
+        hexstr = "".join(c * 2 for c in hexstr)
+    r = int(hexstr[0:2], 16) / 255
+    g = int(hexstr[2:4], 16) / 255
+    b = int(hexstr[4:6], 16) / 255
+    rgba = Gdk.RGBA()
+    rgba.red, rgba.green, rgba.blue, rgba.alpha = r, g, b, 1.0
+    return rgba
+
+
+def rgba_to_hex(rgba):
+    """Convert a Gdk.RGBA back to a '#rrggbb' string."""
+    r = round(rgba.red * 255)
+    g = round(rgba.green * 255)
+    b = round(rgba.blue * 255)
+    return "#{:02x}{:02x}{:02x}".format(r, g, b)
+
+
+def validate_new_key(key):
+    """Return an error message string if key is unusable, else None."""
+    if not key:
+        return "Key cannot be empty."
+    if key[0].isspace():
+        return "Key cannot start with whitespace."
+    if key.startswith('!'):
+        return "Key cannot start with '!' — use the Enabled checkbox instead."
+    if ':' in key:
+        return "Key cannot contain ':'."
+    return None
+
+
+class ConfigLine:
+    """Represents one line of the file. Only 'property' lines are editable."""
+
+    def __init__(self, raw):
+        self.raw = raw
+        self.is_property = False
+        self.disabled = False
+        self.key = None
+        self.value = None
+
+        stripped = raw.rstrip('\n')
+        m = LINE_RE.match(stripped)
+        if m and ':' in stripped:
+            self.is_property = True
+            self.disabled = bool(m.group('disabled'))
+            self.key = m.group('key').strip()
+            self.value = m.group('value').strip()
+
+    def render(self):
+        """Rebuild the raw line from current key/value (only for property lines)."""
+        if not self.is_property:
+            return self.raw.rstrip('\n')
+        prefix = '!' if self.disabled else ''
+        return f"{prefix}{self.key}: {self.value}"
+
+
+def load_file(path):
+    with open(path, 'r') as f:
+        lines = f.readlines()
+    return [ConfigLine(line) for line in lines]
+
+
+def save_file(path, config_lines):
+    with open(path, 'w') as f:
+        for cl in config_lines:
+            f.write(cl.render() + '\n')
+
+
+class XresEditorWindow(Gtk.Window):
+    # ListStore columns
+    COL_ENABLED = 0   # bool, True = enabled (not disabled)
+    COL_KEY = 1       # str
+    COL_VALUE = 2     # str
+    COL_LINE_IDX = 3  # int, index into self.config_lines
+
+    def __init__(self, path):
+        super().__init__(title=f"Xresources Editor — {path}")
+        self.path = path
+        self.dirty = False
+
+        self.config_lines = load_file(path)
+        self.prop_indices = [i for i, cl in enumerate(self.config_lines) if cl.is_property]
+
+        self.set_default_size(720, 480)
+        self.connect("delete-event", self.on_delete_event)
+
+        # Accelerators: Ctrl+S to save, Ctrl+N to add a property
+        accel_group = Gtk.AccelGroup()
+        self.add_accel_group(accel_group)
+
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        self.add(vbox)
+
+        # Toolbar
+        toolbar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+        toolbar.set_margin_top(6)
+        toolbar.set_margin_bottom(6)
+        toolbar.set_margin_start(6)
+        toolbar.set_margin_end(6)
+        vbox.pack_start(toolbar, False, False, 0)
+
+        save_btn = Gtk.Button(label="Save (Ctrl+S)")
+        save_btn.connect("clicked", lambda *_: self.save())
+        save_btn.add_accelerator("clicked", accel_group, Gdk.KEY_s,
+                                  Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE)
+        toolbar.pack_start(save_btn, False, False, 0)
+
+        add_btn = Gtk.Button(label="Add Property (Ctrl+N)")
+        add_btn.connect("clicked", self.on_add_property_clicked)
+        add_btn.add_accelerator("clicked", accel_group, Gdk.KEY_n,
+                                 Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE)
+        toolbar.pack_start(add_btn, False, False, 0)
+
+        self.status_label = Gtk.Label(label="")
+        self.status_label.set_xalign(0)
+        toolbar.pack_start(self.status_label, True, True, 0)
+
+        # Scrolled window + TreeView
+        scroller = Gtk.ScrolledWindow()
+        scroller.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        vbox.pack_start(scroller, True, True, 0)
+
+        self.store = Gtk.ListStore(bool, str, str, int)
+        for row_i, prop_i in enumerate(self.prop_indices):
+            cl = self.config_lines[prop_i]
+            self.store.append([not cl.disabled, cl.key, cl.value, prop_i])
+
+        self.treeview = Gtk.TreeView(model=self.store)
+        self.treeview.set_rules_hint(True)
+        scroller.add(self.treeview)
+
+        # "On" toggle column
+        toggle_renderer = Gtk.CellRendererToggle()
+        toggle_renderer.connect("toggled", self.on_enabled_toggled)
+        col_enabled = Gtk.TreeViewColumn("On", toggle_renderer, active=self.COL_ENABLED)
+        self.treeview.append_column(col_enabled)
+
+        # Key column (read-only)
+        key_renderer = Gtk.CellRendererText()
+        col_key = Gtk.TreeViewColumn("Key", key_renderer, text=self.COL_KEY)
+        col_key.set_resizable(True)
+        col_key.set_min_width(200)
+        self.treeview.append_column(col_key)
+
+        # Color swatch column — filled cell for #hex values, blank
+        # otherwise. Clicking it opens a color picker.
+        swatch_renderer = Gtk.CellRendererText()
+        col_swatch = Gtk.TreeViewColumn("", swatch_renderer)
+        col_swatch.set_cell_data_func(swatch_renderer, self.swatch_cell_func)
+        col_swatch.set_min_width(28)
+        col_swatch.set_fixed_width(28)
+        col_swatch.set_resizable(False)
+        self.treeview.append_column(col_swatch)
+        self.col_swatch = col_swatch
+
+        # Font preview column — shows the family name rendered in its
+        # own font for xft:... values. Clicking it opens a font chooser.
+        font_renderer = Gtk.CellRendererText()
+        col_font = Gtk.TreeViewColumn("", font_renderer)
+        col_font.set_cell_data_func(font_renderer, self.font_cell_func)
+        col_font.set_min_width(160)
+        col_font.set_resizable(True)
+        self.treeview.append_column(col_font)
+        self.col_font = col_font
+
+        # Value column (editable)
+        value_renderer = Gtk.CellRendererText()
+        value_renderer.set_property("editable", True)
+        value_renderer.connect("edited", self.on_value_edited)
+        col_value = Gtk.TreeViewColumn("Value", value_renderer, text=self.COL_VALUE)
+        col_value.set_resizable(True)
+        col_value.set_expand(True)
+        self.treeview.append_column(col_value)
+        self.col_value = col_value
+
+        # Double-click / Enter routes to the right editor for the row
+        # (color picker, font chooser, or inline text edit).
+        self.treeview.connect("row-activated", self.on_row_activated)
+        self.treeview.connect("button-press-event", self.on_treeview_button_press)
+
+        self.update_title()
+        self.update_status()
+
+    # -- Event handlers -------------------------------------------------
+
+    def on_enabled_toggled(self, _renderer, path_str):
+        it = self.store.get_iter(path_str)
+        prop_i = self.store[it][self.COL_LINE_IDX]
+        cl = self.config_lines[prop_i]
+        cl.disabled = not cl.disabled
+        self.store[it][self.COL_ENABLED] = not cl.disabled
+        self.mark_dirty()
+
+    def on_value_edited(self, _renderer, path_str, new_text):
+        it = self.store.get_iter(path_str)
+        prop_i = self.store[it][self.COL_LINE_IDX]
+        cl = self.config_lines[prop_i]
+        if new_text != cl.value:
+            cl.value = new_text
+            self.store[it][self.COL_VALUE] = new_text
+            self.mark_dirty()
+
+    def _editor_for(self, value):
+        """Decide which special editor (if any) applies to this value."""
+        if parse_color(value):
+            return "color"
+        if is_xft_font(value):
+            return "font"
+        return None
+
+    def on_row_activated(self, treeview, path, column):
+        it = self.store.get_iter(path)
+        value = self.store[it][self.COL_VALUE]
+
+        if column in (self.col_swatch, self.col_value) and parse_color(value):
+            self.open_color_dialog(path)
+            return
+        if column in (self.col_font, self.col_value) and is_xft_font(value):
+            self.open_font_dialog(path)
+            return
+
+        # Jump straight into editing the Value column on double-click/Enter
+        treeview.set_cursor(path, self.col_value, True)
+
+    def on_treeview_button_press(self, widget, event):
+        if event.button != 1:
+            return False
+        path_info = widget.get_path_at_pos(int(event.x), int(event.y))
+        if path_info is None:
+            return False
+        path, column, _cell_x, _cell_y = path_info
+
+        if column == self.col_swatch:
+            it = self.store.get_iter(path)
+            value = self.store[it][self.COL_VALUE]
+            if parse_color(value):
+                self.open_color_dialog(path)
+            return True  # swallow click either way, swatch isn't for cursor placement
+
+        if column == self.col_font:
+            it = self.store.get_iter(path)
+            value = self.store[it][self.COL_VALUE]
+            if is_xft_font(value):
+                self.open_font_dialog(path)
+            return True
+
+        return False
+
+    def swatch_cell_func(self, _column, cell, model, it, _data):
+        value = model[it][self.COL_VALUE]
+        rgba = parse_color(value)
+        if rgba:
+            cell.set_property("cell-background-rgba", rgba)
+            cell.set_property("cell-background-set", True)
+        else:
+            cell.set_property("cell-background-set", False)
+        cell.set_property("text", "")
+
+    def font_cell_func(self, _column, cell, model, it, _data):
+        value = model[it][self.COL_VALUE]
+        try:
+            font_dict = parse_xft_font(value) if value else None
+        except ValueError:
+            font_dict = None
+
+        if font_dict:
+            desc = xft_dict_to_font_desc(font_dict)
+            cell.set_property("font-desc", desc)
+            label = font_dict.get("family") or "Sans"
+            size = font_dict.get("pixelsize") or font_dict.get("size")
+            if size:
+                label = f"{label} {size}"
+            cell.set_property("text", label)
+        else:
+            cell.set_property("font-desc", None)
+            cell.set_property("text", "")
+
+    def open_color_dialog(self, path):
+        it = self.store.get_iter(path)
+        prop_i = self.store[it][self.COL_LINE_IDX]
+        cl = self.config_lines[prop_i]
+
+        current = parse_color(cl.value) or Gdk.RGBA(1.0, 1.0, 1.0, 1.0)
+
+        dialog = Gtk.ColorChooserDialog(title=f"Choose color for {cl.key}", transient_for=self)
+        dialog.set_use_alpha(False)
+        dialog.set_rgba(current)
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+            new_hex = rgba_to_hex(dialog.get_rgba())
+            if new_hex != cl.value:
+                cl.value = new_hex
+                self.store[it][self.COL_VALUE] = new_hex
+                self.mark_dirty()
+        dialog.destroy()
+
+    def open_font_dialog(self, path):
+        it = self.store.get_iter(path)
+        prop_i = self.store[it][self.COL_LINE_IDX]
+        cl = self.config_lines[prop_i]
+
+        try:
+            font_dict = parse_xft_font(cl.value)
+        except ValueError:
+            font_dict = {"type": "xft", "family": "Sans"}
+
+        initial_desc = xft_dict_to_font_desc(font_dict)
+
+        dialog = Gtk.FontChooserDialog(title=f"Choose font for {cl.key}", transient_for=self)
+        dialog.set_font_desc(initial_desc)
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+            new_desc = dialog.get_font_desc()
+            if new_desc:
+                new_dict = font_desc_to_xft_dict(new_desc, original=font_dict)
+                new_value = render_xft_font(new_dict)
+                if new_value != cl.value:
+                    cl.value = new_value
+                    self.store[it][self.COL_VALUE] = new_value
+                    self.mark_dirty()
+        dialog.destroy()
+
+    # -- Add property -----------------------------------------------------
+
+    def get_selected_line_idx(self):
+        """Index into self.config_lines of the currently selected row, or None."""
+        selection = self.treeview.get_selection()
+        model, it = selection.get_selected()
+        if it is None:
+            return None
+        return model[it][self.COL_LINE_IDX]
+
+    def on_add_property_clicked(self, *_args):
+        dialog = Gtk.Dialog(title="Add Property", transient_for=self, modal=True)
+        dialog.add_buttons("Cancel", Gtk.ResponseType.CANCEL, "Add", Gtk.ResponseType.OK)
+
+        content = dialog.get_content_area()
+        content.set_spacing(8)
+        content.set_margin_top(10)
+        content.set_margin_bottom(10)
+        content.set_margin_start(10)
+        content.set_margin_end(10)
+
+        grid = Gtk.Grid(column_spacing=8, row_spacing=8)
+        content.add(grid)
+
+        key_label = Gtk.Label(label="Key:")
+        key_label.set_xalign(0)
+        key_entry = Gtk.Entry()
+        key_entry.set_hexpand(True)
+        key_entry.set_width_chars(30)
+        key_entry.set_placeholder_text("e.g. URxvt.color5")
+        grid.attach(key_label, 0, 0, 1, 1)
+        grid.attach(key_entry, 1, 0, 1, 1)
+
+        value_label = Gtk.Label(label="Value:")
+        value_label.set_xalign(0)
+        value_entry = Gtk.Entry()
+        value_entry.set_hexpand(True)
+        value_entry.set_placeholder_text("e.g. #bb9af7")
+        grid.attach(value_label, 0, 1, 1, 1)
+        grid.attach(value_entry, 1, 1, 1, 1)
+
+        enabled_check = Gtk.CheckButton(label="Enabled")
+        enabled_check.set_active(True)
+        grid.attach(enabled_check, 1, 2, 1, 1)
+
+        error_label = Gtk.Label(label="")
+        error_label.set_xalign(0)
+        error_label.get_style_context().add_class("error")
+        grid.attach(error_label, 0, 3, 2, 1)
+
+        key_entry.set_activates_default(True)
+        value_entry.set_activates_default(True)
+        add_response_btn = dialog.get_widget_for_response(Gtk.ResponseType.OK)
+        if add_response_btn is not None:
+            add_response_btn.set_can_default(True)
+            add_response_btn.grab_default()
+
+        dialog.show_all()
+        key_entry.grab_focus()
+
+        new_key = None
+        new_value = None
+        new_enabled = True
+
+        while True:
+            response = dialog.run()
+            if response != Gtk.ResponseType.OK:
+                dialog.destroy()
+                return
+
+            key = key_entry.get_text().strip()
+            value = value_entry.get_text().strip()
+            err = validate_new_key(key)
+            if err:
+                error_label.set_text(err)
+                continue
+
+            new_key = key
+            new_value = value
+            new_enabled = enabled_check.get_active()
+            break
+
+        dialog.destroy()
+
+        after_idx = self.get_selected_line_idx()
+        new_iter = self.add_property(new_key, new_value, enabled=new_enabled, after_idx=after_idx)
+
+        path = self.store.get_path(new_iter)
+        self.treeview.set_cursor(path, self.col_value, False)
+        self.treeview.scroll_to_cell(path, None, True, 0.5, 0.5)
+        self.treeview.get_selection().select_iter(new_iter)
+
+    def add_property(self, key, value, enabled=True, after_idx=None):
+        """Insert a new property line into self.config_lines and the
+        store, right after after_idx (a config_lines index) or at the
+        end of the file if after_idx is None. Returns the new store iter."""
+        raw = f"{key}: {value}\n"
+        new_cl = ConfigLine(raw)
+        new_cl.disabled = not enabled
+
+        insert_idx = (after_idx + 1) if after_idx is not None else len(self.config_lines)
+        self.config_lines.insert(insert_idx, new_cl)
+
+        # Every existing config_lines index at or after insert_idx shifted +1
+        for row in self.store:
+            if row[self.COL_LINE_IDX] >= insert_idx:
+                row[self.COL_LINE_IDX] += 1
+
+        # Find the store row to insert before, so the list stays in
+        # file order (first row whose (now-shifted) index exceeds ours)
+        insert_before_iter = None
+        for row in self.store:
+            if row[self.COL_LINE_IDX] > insert_idx:
+                insert_before_iter = row.iter
+                break
+
+        new_row = [not new_cl.disabled, new_cl.key, new_cl.value, insert_idx]
+        if insert_before_iter is not None:
+            new_iter = self.store.insert_before(insert_before_iter, new_row)
+        else:
+            new_iter = self.store.append(new_row)
+
+        self.mark_dirty()
+        return new_iter
+
+    def on_delete_event(self, _widget, _event):
+        if not self.dirty:
+            return False  # allow close
+
+        dialog = Gtk.MessageDialog(
+            transient_for=self,
+            modal=True,
+            message_type=Gtk.MessageType.WARNING,
+            buttons=Gtk.ButtonsType.NONE,
+            text="Unsaved changes",
+        )
+        dialog.format_secondary_text(f"Save changes to {self.path} before quitting?")
+        dialog.add_buttons(
+            "Discard", Gtk.ResponseType.NO,
+            "Cancel", Gtk.ResponseType.CANCEL,
+            "Save", Gtk.ResponseType.YES,
+        )
+        response = dialog.run()
+        dialog.destroy()
+
+        if response == Gtk.ResponseType.YES:
+            self.save()
+            return False  # allow close
+        elif response == Gtk.ResponseType.NO:
+            return False  # allow close, discard changes
+        else:
+            return True  # cancel: block close
+
+    # -- Helpers ----------------------------------------------------------
+
+    def mark_dirty(self):
+        self.dirty = True
+        self.update_title()
+        self.update_status()
+
+    def update_title(self):
+        marker = " *" if self.dirty else ""
+        self.set_title(f"Urxvt Editor — {self.path}{marker}")
+
+    def update_status(self):
+        self.status_label.set_text("Unsaved changes" if self.dirty else "Saved")
+
+    def save(self):
+        save_file(self.path, self.config_lines)
+        self.dirty = False
+        self.update_title()
+        self.update_status()
+
+
+def main():
+
+    path = os.path.expanduser("~/.Xresources")
+
+    try:
+        config_lines = load_file(path)
+    except OSError as e:
+        print(f"Error opening {path}: {e}")
+        sys.exit(1)
+
+    if not any(cl.is_property for cl in config_lines):
+        print(f"No editable 'key: value' properties found in {path}")
+        sys.exit(1)
+
+    win = XresEditorWindow(path)
+    win.connect("destroy", Gtk.main_quit)
+    win.show_all()
+    Gtk.main()
+
+
+if __name__ == "__main__":
+    main()
