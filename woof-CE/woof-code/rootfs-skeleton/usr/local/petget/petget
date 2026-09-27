@@ -37,7 +37,11 @@ export OUTPUT_CHARSET=UTF-8
 #export LANG=C
 . /etc/DISTRO_SPECS #has DISTRO_BINARY_COMPAT, DISTRO_COMPAT_VERSION
 
-PASSEDPARAM="$1"
+ACTIONPARAM="$1"
+PASSEDPARAM="$2"
+
+
+
 mkdir -p /tmp/petget_proc/petget #120504
 
 rm -f /tmp/petget_proc/{remove,install}_{,pets_}quietly 2>/dev/null
@@ -45,74 +49,96 @@ rm -f /tmp/petget_proc/{remove,install}_{,pets_}quietly 2>/dev/null
 [ -z "$DISPLAY" -a -z "$WAYLAND_DISPLAY" ] && touch /tmp/petget_proc/install_quietly
 
 #remove a package...
-case "$PASSEDPARAM" in -*) #EX: -read-edid_3.0.1-2_i386.deb
- PKGNAME=${PASSEDPARAM#-} #remove leading '-'
- PKGNAME="$(basename $PKGNAME)"
- [ -z "$DISPLAY" -a -z "$WAYLAND_DISPLAY" ] && touch /tmp/petget_proc/remove_pets_quietly
- TREE2=${PKGNAME%.[^0-9]*} #remove extension
- export TREE2        #this is used by removepreview.sh
- /usr/local/petget/removepreview.sh
- exit
-esac
+case "$ACTIONPARAM" in 
+  
+ purge) #EX: purge read-edid_3.0.1-2_i386.deb
+    PKGNAME=${PASSEDPARAM#-} #remove leading '-'
+    PKGNAME="$(basename $PKGNAME)"
+    [ -z "$DISPLAY" -a -z "$WAYLAND_DISPLAY" ] && touch /tmp/petget_proc/remove_pets_quietly
+    TREE2=${PKGNAME%.[^0-9]*} #remove extension
+    export TREE2        #this is used by removepreview.sh
+    /usr/local/petget/removepreview.sh
+    exit
+ ;;
+ 
+ download)
+ PASSEDBASE="`basename "$PASSEDPARAM"`"
+  case $PASSEDBASE in
+  *.pet) EXT=".pet" ;;
+  *.deb) EXT=".deb" ;;
+  *.tgz) EXT=".tgz" ;;
+  *.txz) EXT=".txz" ;;
+  *.tzst) EXT=".tzst" ;;
+  *.rpm) EXT=".rpm" ;;
+  *.tar.gz) EXT=".tar.gz" ;;
+  *.tar.xz) EXT=".tar.xz" ;;
+  *.tar.zst) EXT=".tar.zst" ;;
+  *) EXT="" ;;
+  esac
 
-#-------- want to install a pkg...
+  #download if required...
+  PKGNAME=""
+  DOWNLOADED=""
+  cd /root
+  #101116 use download_file utility...
+  download_file "$PASSEDPARAM"
 
-#what type is it...
-PASSEDBASE="`basename "$PASSEDPARAM"`"
-case $PASSEDBASE in
- *.pet) EXT=".pet" ;;
- *.deb) EXT=".deb" ;;
- *.tgz) EXT=".tgz" ;;
- *.txz) EXT=".txz" ;;
- *.tzst) EXT=".tzst" ;;
- *.rpm) EXT=".rpm" ;;
- *.tar.gz) EXT=".tar.gz" ;;
- *.tar.xz) EXT=".tar.xz" ;;
- *.tar.zst) EXT=".tar.zst" ;;
- *) EXT="" ;;
-esac
-
-#download if required...
-PKGNAME=""
-DOWNLOADED=""
-if [ "`echo -n "$PASSEDPARAM" | grep -E '^ftp|^http'`" != "" ];then
- cd /root
- #101116 use download_file utility...
- download_file "$PASSEDPARAM"
- PKGPATH="`dirname "$PASSEDPARAM"`" #really a url.
- FULLPKGNAME="`basename "$PASSEDPARAM"`"
- PKGMAIN="`basename "$PASSEDPARAM" ${EXT}`"
- if [ ! -f "$FULLPKGNAME" ];then
-  if [ -n "$DISPLAY" -o -n "$WAYLAND_DISPLAY" ]; then
-   /usr/lib/gtkdialog/box_ok "$(gettext 'Puppy package manager')" error "$(gettext 'Sorry, failed to download') $FULLPKGNAME"
-   exit
-  else
-   dialog --msgbox "$(gettext 'Sorry, failed to download') $FULLPKGNAME" 0 0
-   exit
-  fi
- fi
- DOWNLOADED="yes"
-else
- #get rid of any leading '+'...
- PASSEDPARAM="`echo -n "$PASSEDPARAM" | sed -e 's%^+%%'`"
- FIRSTCHAR="`echo -n "$PASSEDPARAM" | cut -c 1`"
- if [ "$FIRSTCHAR" = "/" -o "$FIRSTCHAR" = "." ];then
-  PKGPATH="`dirname "$PASSEDPARAM"`"
   FULLPKGNAME="`basename "$PASSEDPARAM"`"
-  PKGMAIN="`basename "$PASSEDPARAM" ${EXT}`"
- else
-  PKGPATH="`pwd`"
-  if [ "$EXT" = "" ];then
-   PKGMAIN="$PASSEDPARAM"
-   FULLPKGNAME="${PKGMAIN}.pet"
-   EXT=".pet"
-  else
-   FULLPKGNAME="`basename "$PASSEDPARAM"`"
-   PKGMAIN="`basename "$PASSEDPARAM" ${EXT}`"
+  
+  if [ ! -f "$FULLPKGNAME" ];then
+    if [ -n "$DISPLAY" -o -n "$WAYLAND_DISPLAY" ]; then
+    /usr/lib/gtkdialog/box_ok "$(gettext 'Puppy package manager')" error "$(gettext 'Sorry, failed to download') $FULLPKGNAME"
+    exit
+    else
+    dialog --msgbox "$(gettext 'Sorry, failed to download') $FULLPKGNAME" 0 0
+    exit
+    fi
   fi
- fi
- cp -f "${PKGPATH}/${FULLPKGNAME}" /root/ 2>/dev/null #v424 fix if spaces in path.
-fi
+  DOWNLOADED="yes"
+ ;;
+
+ install)
+  PASSEDBASE="`basename "$PASSEDPARAM"`"
+  case $PASSEDBASE in
+  *.pet) EXT=".pet" ;;
+  *.deb) EXT=".deb" ;;
+  *.tgz) EXT=".tgz" ;;
+  *.txz) EXT=".txz" ;;
+  *.tzst) EXT=".tzst" ;;
+  *.rpm) EXT=".rpm" ;;
+  *.tar.gz) EXT=".tar.gz" ;;
+  *.tar.xz) EXT=".tar.xz" ;;
+  *.tar.zst) EXT=".tar.zst" ;;
+  *) EXT="" ;;
+  esac
+
+  #download if required...
+  PKGNAME=""
+  DOWNLOADED=""
+  #get rid of any leading '+'...
+  PASSEDPARAM="`echo -n "$PASSEDPARAM" | sed -e 's%^+%%'`"
+  FIRSTCHAR="`echo -n "$PASSEDPARAM" | cut -c 1`"
+  if [ "$FIRSTCHAR" = "/" -o "$FIRSTCHAR" = "." ];then
+    PKGPATH="`dirname "$PASSEDPARAM"`"
+    FULLPKGNAME="`basename "$PASSEDPARAM"`"
+    PKGMAIN="`basename "$PASSEDPARAM" ${EXT}`"
+  else
+    PKGPATH="`pwd`"
+    if [ "$EXT" = "" ];then
+    PKGMAIN="$PASSEDPARAM"
+    FULLPKGNAME="${PKGMAIN}.pet"
+    EXT=".pet"
+    else
+    FULLPKGNAME="`basename "$PASSEDPARAM"`"
+    PKGMAIN="`basename "$PASSEDPARAM" ${EXT}`"
+    fi
+  fi
+  cp -f "${PKGPATH}/${FULLPKGNAME}" /root/ 2>/dev/null #v424 fix if spaces in path.
+
+ ;;
+
+esac
+
 originPKGPATH="$PKGPATH" #w482
 PKGPATH=/root
 
