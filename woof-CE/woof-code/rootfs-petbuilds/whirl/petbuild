@@ -1,0 +1,23 @@
+download() {
+    [ -e Whirl.tar.gz ] || curl -L https://github.com/Hammad-hab/Whirl/archive/refs/heads/main.tar.gz -o Whirl.tar.gz
+}
+
+
+build() {
+    [ -d Whirl-main ] || tar -xzf Whirl.tar.gz
+    cd Whirl-main
+    rm -rf assets
+    rm -f README.md
+    rm -rf zip.sh
+
+   mkdir -p build
+   cp -r whirl build/
+   cp whirl.py build/__main__.py
+
+   python3 -m zipapp build -p "/usr/bin/env python3" -o whirl-xe
+    
+   chmod 755 whirl-xe
+   rm -rf build/
+   install -D -m 755 whirl-xe /usr/sbin/whirl-xe
+}
+
