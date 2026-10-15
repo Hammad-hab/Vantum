@@ -1,34 +1,22 @@
+PKG=connman-ui_0~20150623.orig.tar.gz
+URL=https://deb.debian.org/debian/pool/main/c/connman-ui/${PKG}
 
 download() {
-    [ -f connman-ui.tar.gz ] || \
-        wget -t 3 -T 60 -O connman-ui.tar.gz \
-        https://deb.debian.org/debian/pool/main/c/connman-ui/connman-ui_0~20150623.orig.tar.gz
+    [ -f "$PKG" ] || wget -t 3 -T 60 -O "$PKG" "$URL"
 }
 
 build() {
-    tar -xzf connman-ui.tar.gz
-
-    SRC_DIR=$(find . -maxdepth 1 -mindepth 1 -type d \
-        -name '*connman*' -print -quit)
-
-    [ -n "$SRC_DIR" ] || {
-        echo "Error: extracted connman-ui source directory not found"
-        return 1
-    }
-
-    cd "$SRC_DIR" || return 1
-
-    patch -p1 < ../grab.patch || return 1
-    patch -p1 < ../no-label.patch || return 1
-
-    ./autogen.sh || return 1
-    ./configure --prefix=/usr || return 1
-    make || return 1
-    make install || return 1
+    mkdir connman-ui
+    tar -xzf "$PKG" -C connman-ui --strip-components=1
+    cd connman-ui
+    patch -p1 < ../grab.patch
+    patch -p1 < ../no-label.patch
+    ./autogen.sh
+    ./configure --prefix=/usr
+    make install
 
     for ICON in /usr/share/connman_ui_gtk/icons/*.png; do
-        [ -f "$ICON" ] || continue
-        [ -f "../${ICON%.png}.svg" ] || continue
-        rm -f "$ICON"
+        [ -f ../${ICON%.png}.svg ] || continue
+        rm -f ${ICON}
     done
 }
