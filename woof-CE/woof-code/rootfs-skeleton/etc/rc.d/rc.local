@@ -1,0 +1,2 @@
+chown 0:0 /root
+chmod 700 /root
