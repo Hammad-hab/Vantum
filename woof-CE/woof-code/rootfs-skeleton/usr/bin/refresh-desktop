@@ -1,0 +1,12 @@
+#!/bin/sh
+#261018 added Vantum desktop refresh script for restarting Vantask, tint2 and picom during development.
+
+jwm -restart
+
+pkill -x vantask
+pkill -x tint2
+pkill -x picom
+
+[ -f /usr/sbin/vantask ] && /usr/sbin/vantask /root/.config/task.xml &
+[ -f /root/tint2rc ] && tint2 -c /root/tint2rc &
+picom -b --backend xrender &

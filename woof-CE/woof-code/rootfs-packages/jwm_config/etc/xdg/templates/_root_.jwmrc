@@ -20,6 +20,20 @@
     <Option>constrain</Option>
 </Group>
 
+<RootMenu onroot="3">
+    <Program label="Terminal">
+        <Command>urxt</Command>
+    </Program>
+
+    <Program label="Wallpaper">
+        <Command>/bin/set_wallpaper</Command>
+    </Program>
+
+	<Program label="Refresh">
+        <Command>/bin/</Command>
+    </Program>
+</RootMenu>
+
 <!-- jwm menus for puppy Linux -->
 
 <!-- General classes -->

@@ -208,7 +208,7 @@ if [ "$CURRENTWM" != "jwm" -a "$CURRENTWM" != "icewm" ];then
  fi
  [ "$desktop" = "rox" ] && [ -f /usr/bin/lxpanel ] && lxpanel &
 fi
-
+#261018 added Vantask, picom and tint2 startup for Vantum desktop.
 [ -f /usr/sbin/vantask ] && /usr/sbin/vantask /root/.config/task.xml &
 picom -b --backend xrender
 [ -f /root/tint2rc ] && tint2 -c /root/tint2rc &
