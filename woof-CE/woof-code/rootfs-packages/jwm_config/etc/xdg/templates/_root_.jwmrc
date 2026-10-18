@@ -30,7 +30,7 @@
     </Program>
 
 	<Program label="Refresh">
-        <Command>/bin/</Command>
+        <Command>/usr/bin/refresh-desktop</Command>
     </Program>
 </RootMenu>
 

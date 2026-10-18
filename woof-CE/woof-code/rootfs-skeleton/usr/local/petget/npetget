@@ -355,33 +355,34 @@ find_pkg_entry() {
   return 1
 }
 
-#print the URL listed for a database in DISTRO_PET_REPOS / DISTRO_COMPAT_REPOS
-repo_url_for_db() {
+#DISTRO_PET_REPOS and DISTRO_COMPAT_REPOS are shell scripts, not data tables. They
+#define PET_REPOS and REPOS_DISTRO_COMPAT: lists of 'z|repo-url|db-glob' entries,
+#where db-glob (ex: Packages-ubuntu-jammy-*) says which databases that repo serves.
+#Source each one in a subshell (nothing leaks out) and print the repo url of every
+#entry whose db-glob matches database name $1. Several mirrors may match.
+repo_urls_for_db() {
   for rf in "$PKGDIR/DISTRO_PET_REPOS" "$PKGDIR/DISTRO_COMPAT_REPOS"; do
     [ -f "$rf" ] || continue
-    grep -v '^[[:space:]]*#' "$rf" | awk -F'|' -v d="$1" '
-      $3==d {print $2; found=1; exit}
-      {u[NR]=$2; n[NR]=$3}
-      END {if(!found) for(i=1;i<=NR;i++) if(n[i]!="" && index(n[i],d)) {print u[i]; exit}}'
-  done | head -n 1
+    (
+      cd "$PKGDIR" 2>/dev/null
+      . "$rf" >/dev/null 2>&1
+      set -f #entries contain '*', don't let the shell expand them as filenames
+      for entry in $PET_REPOS $REPOS_DISTRO_COMPAT; do
+        url="$(echo "$entry" | cut -f2 -d'|')"
+        glob="$(echo "$entry" | cut -f3 -d'|')"
+        [ -n "$url" ] && [ -n "$glob" ] || continue
+        case "$1" in $glob) echo "$url" ;; esac
+      done
+    )
+  done | awk '!seen[$0]++'
 }
 
-#print candidate download URLs, most likely first. $1=repo url $2=path field $3=filename
+#print candidate download URLs for one repo. $1=repo url $2=path field $3=filename
 url_candidates() {
   U="${1%/}"
   P="$(echo "$2" | sed -e 's%^\./*%%' -e 's%^/*%%' -e 's%/*$%%')"
-  F="$3"
-  case "${U##*/}" in
-    Packages*|*.xz|*.gz|*.bz2|*.zst|*.txt|*.TXT) DIRU="${U%/*}" ;; #url of a package list file
-    *) DIRU="$U" ;;
-  esac
-  APTB=""
-  case "$U" in */dists/*) APTB="${U%%/dists/*}" ;; esac #debian/ubuntu style archive root
-  for base in "$APTB" "$DIRU"; do
-    [ -n "$base" ] || continue
-    [ -n "$P" ] && echo "${base}/${P}/${F}"
-    echo "${base}/${F}"
-  done
+  [ -n "$P" ] && echo "${U}/${P}/${3}"
+  echo "${U}/${3}"
 }
 
 #resolve a package name to a working URL in RESOLVED_URL. Prints reasons on failure.
@@ -392,19 +393,21 @@ resolve_pkg_url() {
     [ -n "$SUGGEST" ] && { echo "Did you mean one of these (use the full name)?" >&2; echo "$SUGGEST" >&2; }
     return 1
   fi
-  REPOURL="$(repo_url_for_db "$GET_DB")"
-  if [ -z "$REPOURL" ]; then
-    echo "petget: found $GET_PKG in $GET_DB, but no URL for $GET_DB in DISTRO_PET_REPOS or DISTRO_COMPAT_REPOS" >&2
+  REPOURLS="$(repo_urls_for_db "$GET_DB")"
+  if [ -z "$REPOURLS" ]; then
+    echo "petget: found $GET_PKG in $GET_DB, but no entry in PET_REPOS (DISTRO_PET_REPOS) or REPOS_DISTRO_COMPAT (DISTRO_COMPAT_REPOS) has a database pattern matching $GET_DB" >&2
     return 2
   fi
   TRIED=""
-  for cand in $(url_candidates "$REPOURL" "$GET_PATH" "$GET_FILE"); do
-    TRIED="${TRIED}
+  for REPOURL in $REPOURLS; do
+    for cand in $(url_candidates "$REPOURL" "$GET_PATH" "$GET_FILE"); do
+      TRIED="${TRIED}
   ${cand}"
-    if wget --spider -q --tries=1 -T 15 "$cand" 2>/dev/null; then
-      RESOLVED_URL="$cand"
-      return 0
-    fi
+      if wget --spider -q --tries=1 -T 10 "$cand" 2>/dev/null; then
+        RESOLVED_URL="$cand"
+        return 0
+      fi
+    done
   done
   echo "petget: found $GET_PKG ($GET_DB, path='$GET_PATH', file='$GET_FILE') but none of these URLs exist:${TRIED}" >&2
   return 3
@@ -474,6 +477,7 @@ case "$ACTIONPARAM" in
   cd "$DIR"
  ;;
 
+
  list)
     #list every package in the active repo databases: name|path/file|repo
     REPOLIST=/tmp/petget_proc/petget_active_repo_list
@@ -497,7 +501,13 @@ case "$ACTIONPARAM" in
             echo "petget: missing database $dbfile" >&2
             continue
         fi
-        awk -F'|' -v repo="$repo" '{print $1 "|" $7 "/" $8 "|" repo}' "$dbfile"
+
+        awk -F'|' -v repo="$repo" -v q="$PASSEDPARAM" '
+          function norm(s) { s = tolower(s); gsub(/[-_. ]/, "", s); return s }
+          BEGIN { nq = norm(q) }
+          nq == "" || index(norm($1), nq) {print $1 "|" $7 "/" $8 "|" repo}
+        ' "$dbfile"
+      
     done | ${PAGER:-less}
  ;;
 
