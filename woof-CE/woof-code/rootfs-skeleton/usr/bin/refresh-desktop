@@ -3,7 +3,7 @@
 
 jwm -restart
 
-pkill -x vantask
+pkill -f '/usr/sbin/vantask'
 pkill -x tint2
 pkill -x picom
 

@@ -22,15 +22,15 @@
 
 <RootMenu onroot="3">
     <Program label="Terminal">
-        <Command>urxt</Command>
+        urxvt
     </Program>
 
     <Program label="Wallpaper">
-        <Command>/bin/set_wallpaper</Command>
+    	/bin/set_wallpaper
     </Program>
 
 	<Program label="Refresh">
-        <Command>/usr/bin/refresh-desktop</Command>
+    	/usr/bin/refresh-desktop
     </Program>
 </RootMenu>
 

@@ -12,7 +12,7 @@ export LANG=C #faster.
 exit_error() {
 	echo "$@"
 	if [ "$RUNNINGPUP" = "yes" ] ; then
-		echo
+		echo 
 		echo "$(gettext 'PPM database update failed.')" 
 		echo  -n "Press ENTER key to exit: "
 		read zzz
