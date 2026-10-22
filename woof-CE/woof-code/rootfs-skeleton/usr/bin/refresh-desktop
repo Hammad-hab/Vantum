@@ -9,4 +9,4 @@ pkill -x picom
 
 [ -f /usr/sbin/vantask ] && /usr/sbin/vantask /root/.config/task.xml &
 [ -f /root/tint2rc ] && tint2 -c /root/tint2rc &
-picom -b --backend xrender &
+picom -b --backend xrender &    
